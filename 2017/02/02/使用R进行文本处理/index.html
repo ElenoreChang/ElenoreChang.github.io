@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="R语言,翻译,文本挖掘," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="原文：Text Processing in R 概述这篇教程复习了一些在 R 中进行文本处理所需要的一些基本概念和指令。R 语言并不是进行文本处理的唯一工具，也不一定是最好的方式。Python 实际上是用于文本处理的编程语言，它具有大量的内置函数可以很简单并且快速的进行操作，并且还具有大量成熟且功能全面的文本处理包，比如 NLTK 和 textblob . 基础的 shell 脚本也可以成数量级的">
+<meta name="keywords" content="R语言,翻译,文本挖掘">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用R进行文本处理">
+<meta property="og:url" content="http://yoursite.com/2017/02/02/使用R进行文本处理/index.html">
+<meta property="og:site_name" content="张店长的博客">
+<meta property="og:description" content="原文：Text Processing in R 概述这篇教程复习了一些在 R 中进行文本处理所需要的一些基本概念和指令。R 语言并不是进行文本处理的唯一工具，也不一定是最好的方式。Python 实际上是用于文本处理的编程语言，它具有大量的内置函数可以很简单并且快速的进行操作，并且还具有大量成熟且功能全面的文本处理包，比如 NLTK 和 textblob . 基础的 shell 脚本也可以成数量级的">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2017-08-01T07:06:40.613Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用R进行文本处理">
+<meta name="twitter:description" content="原文：Text Processing in R 概述这篇教程复习了一些在 R 中进行文本处理所需要的一些基本概念和指令。R 语言并不是进行文本处理的唯一工具，也不一定是最好的方式。Python 实际上是用于文本处理的编程语言，它具有大量的内置函数可以很简单并且快速的进行操作，并且还具有大量成熟且功能全面的文本处理包，比如 NLTK 和 textblob . 基础的 shell 脚本也可以成数量级的">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/02/02/使用R进行文本处理/"/>
+
+
+
+
+
+  <title>使用R进行文本处理 | 张店长的博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">张店长的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/02/使用R进行文本处理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ElenoreZH">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="张店长的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">使用R进行文本处理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-02T00:00:00+08:00">
+                2017-02-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/02/02/使用R进行文本处理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/02/02/使用R进行文本处理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>原文：<a href="http://www.mjdenny.com/Text_Processing_In_R.html" target="_blank" rel="external">Text Processing in R</a></p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>这篇教程复习了一些在 R 中进行文本处理所需要的一些基本概念和指令。R 语言并不是进行文本处理的唯一工具，也不一定是最好的方式。Python 实际上是用于文本处理的编程语言，它具有大量的<a href="http://gnosis.cx/TPiP/" target="_blank" rel="external">内置函数</a>可以很简单并且快速的进行操作，并且还具有大量成熟且功能全面的文本处理包，比如 <code>NLTK</code> 和 <code>textblob</code> . 基础的 shell 脚本也可以成数量级的提高处理极其大量文本语料集的速度，一个经典的参考可参见 <a href="http://web.stanford.edu/class/cs124/kwc-unix-for-poets.pdf" target="_blank" rel="external">Unix for Poets</a> 。然而使用 R 语言进行文本处理还是有很好的理由的，也就是我们很方便地将 R 的分析结果应用于其他分析。我在这篇教程中主要使用了 <code>stringr</code> 包，安装很简单：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">install.packages(<span class="string">"stringr"</span>, dependencies = <span class="literal">TRUE</span>)</div><div class="line"><span class="keyword">library</span>(stringr)</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>我还成功链接过一些使用其他语言编写的用于文本处理的包（本篇教程中不涉及该步骤）。以下是我最喜欢的两个包的链接：</p>
+<ul>
+<li><a href="http://nlp.stanford.edu/software/corenlp.shtml" target="_blank" rel="external">Stanford CoreNLP</a> 包可以进行包括标记化和词性标注等在内的许多非常棒的操作，并且它比  R 中的 <code>OpenNLP</code> 包处理速度要更快。</li>
+<li><a href="https://github.com/mimno/Mallet" target="_blank" rel="external">MALLET</a> 可以对文本进行许多有用的统计分析，包括对 <a href="http://en.wikipedia.org/wiki/Latent_Dirichlet_allocation" target="_blank" rel="external">LDA</a> 的非常快速的执行。<a href="http://mallet.cs.umass.edu/" target="_blank" rel="external">此处</a>有一些使用案例，但下载需要点击最开始的链接。</li>
+</ul>
+<h2 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h2><p><a href="http://en.wikipedia.org/wiki/Regular_expression" target="_blank" rel="external">正则表达式</a>是指定描述字符串规则的一种方式（比如，每个以”a”开头的单词），它比简单地指定一个字典并从中逐一检查每个值是否满足某些规则的做法要更简单和充分。你可以从阅读这篇<a href="http://www.regular-expressions.info/quickstart.html" target="_blank" rel="external">正则表达式的综述</a>开始，然后阅读这篇关于<a href="http://www.regular-expressions.info/rlanguage.html" target="_blank" rel="external">在R中使用正则表达式</a>的入门文章。重要的是理解正则表达式比单纯的字符串匹配强大得多。<br>如果你想开始使用正则表达式的话，可以从阅读上述的教程贴开始，但我认为直接在案例中进行试验并看它是如何工作的是一种更为有效的方法。一种很简单的方法是使用一个带高亮匹配结果的图形界面的在线应用，比如 <a href="https://regex101.com/" target="_blank" rel="external">regex101</a>. 我个人更倾向于使用 <a href="http://www.mactechnologies.com/index.php?page=downloads#regexrx" target="_blank" rel="external">RegExRx</a> ，它可以运行在 OSX 和 Windows 平台，有共享软件版本，也在 Apple App Store 中提供付费版本。这个程序包含对Perl风格正则表达式的支持，这种风格的正则表达式很常见，并且在一些 R 语言包中也有使用。不管你选择哪种软件，我建议在R中使用正则表达式之前，可以先随意阅读几个小时网上检索到的相关文章。同时我也倾向于使用这些程序来规范化我在产品代码中将会用到的正则表达式。</p>
+<h2 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h2><p>让我们从一个简单的字符串开始。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">my_string &lt;- <span class="string">"Example STRING, with numbers (12, 15 and also 10.2)?!"</span></div></pre></td></tr></table></figure>
+<p>首先我们可以先将整个字符串小写化，这通常是一个好的起点。这样做可以防止在进行字符串匹配时出现类似将 “Table” 和 “table” 当作不同单词处理的情况。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lower_string &lt;- tolower(my_string)</div></pre></td></tr></table></figure>
+<p>我们还可以创建第二个字符串，并将其粘贴到第一个字符串的末尾：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">second_string &lt;- <span class="string">"Wow, two sentences."</span></div><div class="line">my_string &lt;- paste(my_string,second_string,sep = <span class="string">" "</span>)</div></pre></td></tr></table></figure>
+<p>现在我们可以将这个字符串分离成若干个字符串，使用 <a href="http://journal.r-project.org/archive/2010-2/RJournal_2010-2_Wickham.pdf" target="_blank" rel="external"><code>stringr</code></a> 中的 <code>str_split()</code>  函数可以实现这项操作。以下这行代码可以将上面合并的字符串按照感叹号进行分离：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">my_string_vector &lt;- str_split(my_string, <span class="string">"!"</span>)[[<span class="number">1</span>]]</div></pre></td></tr></table></figure>
+<p>需要注意的是用于分隔的字符在这项操作之后被删除了，但我们现在实际上获得了两个句子，每一个被作为一个单独的字符串储存。注意这一步返回的是一个 list , 因此要获得实际包含分隔后的字符串的向量，我们需要使用 <code>list</code> 操作符获得第一个元素。<br>现在，假设我们对包含问号的句子感兴趣，我们可以在结果值 <code>my_string_vector</code> 中使用 <code>rep()</code> 指令搜索包含 “?” 的字符串。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">grep(<span class="string">"\\?"</span>,my_string_vector)</div></pre></td></tr></table></figure>
+<p>你也许注意到了，上面的字符串中不止包含一个 ”?”，它包含的是一个 ”\?”. 原因是因为，在正则表达式中 ”?” 是一个具有特殊含义的字符，因此我们需要通过使用一个”\”来跳过它，然而，由于字符串传递到底层函数的方式，我们实际上需要第二个 ”\” ，以确保当输入传递给 C 时，字符串中包含一个 ”\” 。你可以查阅这个<a href="http://www.regular-expressions.info/characters.html" target="_blank" rel="external">特殊字符清单</a>来看看哪些字符需要避开以获得它们的字面值。我们还需要检查 <code>my_string_vector</code> 中的单个字符串是否包含问号。这对于条件语句是非常有用处的，比如，如果我们在处理的是网页行，我们需要对具有标题标签 <code>&lt;h1&gt;</code> 的行和不具有标题标签的行进行不同的处理，那么使用带有逻辑 <code>grep</code> 的条件语句，<code>grep()</code>，是非常有帮助的。看一下示例：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">grepl(<span class="string">"\\?"</span>,my_string_vector[<span class="number">1</span>])</div></pre></td></tr></table></figure>
+<p>还有两个我常用到的函数，第一个是将一些字符替换成其他字符，使用 <code>str_replace_all()</code> 函数可以实现，如下所示：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">str_replace_all(my_string, <span class="string">"e"</span>,<span class="string">"___"</span>)</div></pre></td></tr></table></figure>
+<p>另一个我时常用到的是使用 <code>str_extract_all()</code> 函数, 来提取字符串中所有数字：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">str_extract_all(my_string,<span class="string">"[0-9]+"</span>)</div></pre></td></tr></table></figure>
+<p>注意在这里我们使用了第一个真正的正则表达式—— <code>[0-9]+</code>, 其含义是“匹配任何是一个或多个连续数字的子字符串”。这些只是用于在 R 中处理文本的许多更复杂的命令中的几个。我也只仅仅展示了一些最简单的正则表达式。在这个领域还有许多需要学习的，初学者可能会觉得有些压力，因此我建议先从工具的使用开始，然后当涉及更复杂的大块文本或文本处理任务时再利用 Google 来拓展你的能力。</p>
+<h2 id="文本清理"><a href="#文本清理" class="headerlink" title="文本清理"></a>文本清理</h2><p>读入并清理原始文本输入文件是一项最基本的操作。实现这项操作，我们需要用到两个函数，一个是用于清洗单个字符串，删除任何不是字幕的字符，将所有字母小写化，并在对结果进行分词之前去除所有单词之间的空格，最后返回一个包含单个单词的向量。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">Clean_String &lt;- <span class="keyword">function</span>(string)&#123;</div><div class="line">    <span class="comment"># Lowercase</span></div><div class="line">    temp &lt;- tolower(string)</div><div class="line">    <span class="comment">#' Remove everything that is not a number or letter (may want to keep more </span></div><div class="line">    <span class="comment">#' stuff in your actual analyses). </span></div><div class="line">    temp &lt;- stringr::str_replace_all(temp,<span class="string">"[^a-zA-Z\\s]"</span>, <span class="string">" "</span>)</div><div class="line">    <span class="comment"># Shrink down to just one white space</span></div><div class="line">    temp &lt;- stringr::str_replace_all(temp,<span class="string">"[\\s]+"</span>, <span class="string">" "</span>)</div><div class="line">    <span class="comment"># Split it</span></div><div class="line">    temp &lt;- stringr::str_split(temp, <span class="string">" "</span>)[[<span class="number">1</span>]]</div><div class="line">    <span class="comment"># Get rid of trailing "" if necessary</span></div><div class="line">    indexes &lt;- which(temp == <span class="string">""</span>)</div><div class="line">    <span class="keyword">if</span>(length(indexes) &gt; <span class="number">0</span>)&#123;</div><div class="line">      temp &lt;- temp[-indexes]</div><div class="line">    &#125; </div><div class="line">    <span class="keyword">return</span>(temp)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>让我们通过在控制台中运行一段代码来测试这个函数（从而定义函数），然后对以下句子进行清洗并分词：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">sentence &lt;- <span class="string">"The term 'data science' (originally used interchangeably with 'datalogy') has existed for over thirty years and was used initially as a substitute for computer science by Peter Naur in 1960."</span></div><div class="line">clean_sentence &lt;- Clean_String(sentence)</div><div class="line">&gt; print(clean_sentence) </div><div class="line"> [<span class="number">1</span>] <span class="string">"the"</span>             <span class="string">"term"</span>            <span class="string">"data"</span>           </div><div class="line"> [<span class="number">4</span>] <span class="string">"science"</span>         <span class="string">"originally"</span>      <span class="string">"used"</span>           </div><div class="line"> [<span class="number">7</span>] <span class="string">"interchangeably"</span> <span class="string">"with"</span>            <span class="string">"datalogy"</span>       </div><div class="line">[<span class="number">10</span>] <span class="string">"has"</span>             <span class="string">"existed"</span>         <span class="string">"for"</span>            </div><div class="line">[<span class="number">13</span>] <span class="string">"over"</span>            <span class="string">"thirty"</span>          <span class="string">"years"</span>          </div><div class="line">[<span class="number">16</span>] <span class="string">"and"</span>             <span class="string">"was"</span>             <span class="string">"used"</span>           </div><div class="line">[<span class="number">19</span>] <span class="string">"initially"</span>       <span class="string">"as"</span>              <span class="string">"a"</span>              </div><div class="line">[<span class="number">22</span>] <span class="string">"substitute"</span>      <span class="string">"for"</span>             <span class="string">"computer"</span>       </div><div class="line">[<span class="number">25</span>] <span class="string">"science"</span>         <span class="string">"by"</span>              <span class="string">"peter"</span>          </div><div class="line">[<span class="number">28</span>] <span class="string">"naur"</span>            <span class="string">"in"</span></div></pre></td></tr></table></figure>
+<p>可以看到，特殊字符都被删除了，留下的是包含单个单词的向量。现在我们要将这项操作扩展到处理整个输入文档，为此，我们将要对该文档的所有输入行进行循环，除了返回清除的文本本身之外，我们还可能想返回一些有用的元数据，诸如标记的总数，或者唯一标记的集合。我们可以使用以下函数：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#' function to clean text</span></div><div class="line">Clean_Text_Block &lt;- <span class="keyword">function</span>(text)&#123;</div><div class="line">    <span class="keyword">if</span>(length(text) &lt;= <span class="number">1</span>)&#123;</div><div class="line">        <span class="comment"># Check to see if there is any text at all with another conditional</span></div><div class="line">        <span class="keyword">if</span>(length(text) == <span class="number">0</span>)&#123;</div><div class="line">            cat(<span class="string">"There was no text in this document! \n"</span>)</div><div class="line">            to_return &lt;- list(num_tokens = <span class="number">0</span>, unique_tokens = <span class="number">0</span>, text = <span class="string">""</span>)</div><div class="line">        &#125;<span class="keyword">else</span>&#123;</div><div class="line">            <span class="comment"># If there is , and only only one line of text then tokenize it</span></div><div class="line">            clean_text &lt;- Clean_String(text)</div><div class="line">            num_tok &lt;- length(clean_text)</div><div class="line">            num_uniq &lt;- length(unique(clean_text))</div><div class="line">            to_return &lt;- list(num_tokens = num_tok, unique_tokens = num_uniq, text = clean_text)</div><div class="line">        &#125;</div><div class="line">    &#125;<span class="keyword">else</span>&#123;</div><div class="line">        <span class="comment"># Get rid of blank lines</span></div><div class="line">        indexes &lt;- which(text == <span class="string">""</span>)</div><div class="line">        <span class="keyword">if</span>(length(indexes) &gt; <span class="number">0</span>)&#123;</div><div class="line">            text &lt;- text[-indexes]</div><div class="line">        &#125;  </div><div class="line">        <span class="comment"># Loop through the lines in the text and use the append() function to </span></div><div class="line">        clean_text &lt;- Clean_String(text[<span class="number">1</span>])</div><div class="line">        <span class="keyword">for</span>(i <span class="keyword">in</span> <span class="number">2</span>:length(text))&#123;</div><div class="line">            <span class="comment"># add them to a vector </span></div><div class="line">            clean_text &lt;- append(clean_text,Clean_String(text[i]))</div><div class="line">        &#125;</div><div class="line">        <span class="comment"># Calculate the number of tokens and unique tokens and return them in a </span></div><div class="line">        <span class="comment"># named list object.</span></div><div class="line">        num_tok &lt;- length(clean_text)</div><div class="line">        num_uniq &lt;- length(unique(clean_text))</div><div class="line">        to_return &lt;- list(num_tokens = num_tok, unique_tokens = num_uniq, text = clean_text)</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span>(to_return)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>现在来尝试以下。你可以在<a href="http://mjdenny.com/workshops/Obama_Speech_2-24-09.txt" target="_blank" rel="external">这里</a>下载到2009年2月24日巴拉克·奥巴马在弗吉尼亚大学米勒中心总统演讲档案馆的联合会议上所发表演讲的纯文本。保存了该文件之后，你需要将 R 的工作目录设置在保存该文件的目录下，然后使用以下代码在在 R 中读入该文件：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">t &lt;- readLines(con)</div><div class="line">close(con)</div></pre></td></tr></table></figure>
+<p>现在你可以运行 <code>Clean_Text_Block()</code> 函数，看一下输出结果：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">clean_speech &lt;- Clean_Text_Block(text)</div><div class="line">&gt; str(clean_speech)</div><div class="line">List of <span class="number">3</span></div><div class="line"> $ num_tokens   : int <span class="number">6146</span></div><div class="line"> $ unique_tokens: int <span class="number">1460</span></div><div class="line"> $ text         : chr [<span class="number">1</span>:<span class="number">6146</span>] <span class="string">"madam"</span> <span class="string">"speaker"</span> <span class="string">"mr"</span> <span class="string">"vice"</span> <span class="keyword">...</span></div></pre></td></tr></table></figure>
+<p>可以看到，这个文件中包含6146个单词，去重后有1460个单词。现在，你已经越过了文本分析中最大的障碍中的一个了，即将你的数据以合理的格式读入R中。</p>
+<h2 id="构建文档-词矩阵"><a href="#构建文档-词矩阵" class="headerlink" title="构建文档-词矩阵"></a>构建文档-词矩阵</h2><p>对于的社会科学的文本数据分析，我们最常做的事情之一是构建文档-词矩阵。这实际上是一个相对具有挑战性的编程任务，它也通常计算量很大，所以我将使用 C++ 编写的函数来完成这个任务。在继续之前，我建议你查看我的教程<a href="http://www.mjdenny.com/Rcpp_Intro.html" target="_blank" rel="external">使用 C++ 和 R 代码与 Rcpp 包</a>来获得关于 C++ 编程的基础。在学会安装 Rcpp 包并运行它之前，你可能还需要按照本教程开始之前的一些步骤，尤其当你使用的是 Windows 或某些版本的 Mac OS X. 在开始之前，你应确保已安装了以下包：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">install.packages(<span class="string">"Rcpp"</span>,dependencies = <span class="literal">T</span>)</div><div class="line">install.packages(<span class="string">"RcppArmadillo"</span>,dependencies = <span class="literal">T</span>)</div><div class="line">install.packages(<span class="string">"BH"</span>,dependencies = <span class="literal">T</span>)</div></pre></td></tr></table></figure>
+<p><code>BH</code> 包对于下面的功能不是必需的，但是安装以后对于以后使用 C++ 函数会有帮助。现在，让我们来看看一个 C++ 函数，它将帮助我们生成一个文档-词矩阵：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;RcppArmadillo.h&gt;</span></span></div><div class="line"><span class="comment">//[[Rcpp::depends(RcppArmadillo)]]</span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> Rcpp;  </div><div class="line"><span class="comment">// [[Rcpp::export]]  </span></div><div class="line">arma::<span class="function">mat <span class="title">Generate_Document_Word_Matrix</span><span class="params">(<span class="keyword">int</span> number_of_docs,</span></span></div><div class="line">                                        <span class="keyword">int</span> number_of_unique_words,</div><div class="line">                                        <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>&gt; unique_words,</div><div class="line">                                        List Document_Words,</div><div class="line">                                        arma::vec Document_Lengths</div><div class="line">                                        )&#123;</div><div class="line">    arma::mat document_word_matrix = arma::zeros(number_of_docs,number_of_unique_words);  </div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> n = <span class="number">0</span>; n &lt; number_of_docs; ++n)&#123;</div><div class="line">        Rcpp::Rcout &lt;&lt; <span class="string">"Current Document: "</span> &lt;&lt; n &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="built_in">std</span>::<span class="built_in">string</span>&gt; current = Document_Words[n];</div><div class="line">        <span class="keyword">int</span> length = Document_Lengths[n];</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; length; ++i)&#123;</div><div class="line">            <span class="keyword">int</span> already = <span class="number">0</span>;</div><div class="line">            <span class="keyword">int</span> counter = <span class="number">0</span>;</div><div class="line">            <span class="keyword">while</span>(already == <span class="number">0</span>)&#123;</div><div class="line">                <span class="keyword">if</span>(counter == number_of_unique_words )&#123;</div><div class="line">                    already = <span class="number">1</span>;</div><div class="line">                &#125;<span class="keyword">else</span>&#123;</div><div class="line">                    <span class="keyword">if</span>(unique_words[counter] == current[i])&#123;</div><div class="line">                        document_word_matrix(n,counter) += <span class="number">1</span>;</div><div class="line">                        already = <span class="number">1</span>;</div><div class="line">                    &#125; </div><div class="line">                    counter +=<span class="number">1</span>;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;    </div><div class="line">    <span class="keyword">return</span> document_word_matrix;     </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>你可以在此下载上述的 C++ 代码的源文件。一旦你把文件保存到你可以访问的地方（下面的例子代码假设它保存在你的工作目录下），你现在可以调用该代码，从而获得一个底层是 C++ 代码的 R 函数。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Rcpp::sourceCpp(<span class="string">'Generate_Document_Word_Matrix.cpp'</span>)</div></pre></td></tr></table></figure>
+<p>现在你可以使用这个功能了，让我们在示例中进行测试。我们要做的第一件事是获取第二个文档，用来创建一个不止一个文档长的文档-词矩阵。你可以点击<a href="http://mjdenny.com/workshops/Obama_Speech_1-27-10.txt" target="_blank" rel="external">这里</a>的链接下载另一个奥巴马演讲（ 2010 年的国情咨文）。我们现在可以将这段文本读入并分词如下：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Read in the file</span></div><div class="line">con &lt;- file(<span class="string">"Obama_Speech_1-27-10.txt"</span>, <span class="string">"r"</span>, blocking = <span class="literal">FALSE</span>)</div><div class="line">text2 &lt;- readLines(con)</div><div class="line">close(con)  </div><div class="line"><span class="comment"># Clean and tokenize the text</span></div><div class="line">clean_speech2 &lt;- Clean_Text_Block(text2)</div></pre></td></tr></table></figure>
+<p>现在我们准备好设置，并使用文档-词矩阵生成器函数：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#' Create a list containing a vector of tokens in each document for each</span></div><div class="line"><span class="comment">#' document. These can be extracted from the cleaned text objects as follows.</span></div><div class="line">doc_list &lt;- list(clean_speech$text,clean_speech2$text)  </div><div class="line"><span class="comment">#' Create a vector of document lengths (in tokens)</span></div><div class="line">doc_lengths &lt;- c(clean_speech$num_tokens,clean_speech2$num_tokens)  </div><div class="line"><span class="comment">#' Generate a vector containing the unique tokens across all documents.</span></div><div class="line">unique_words &lt;- unique(c(clean_speech$text,clean_speech2$text))  </div><div class="line"><span class="comment">#' The number of unique tokens across all documents</span></div><div class="line">n_unique_words &lt;- length(unique_words)  </div><div class="line"><span class="comment">#' The number of documents we are dealing with. </span></div><div class="line">ndoc &lt;- <span class="number">2</span>  </div><div class="line"><span class="comment">#' Now feed all of this information to the function as follows:</span></div><div class="line">Doc_Term_Matrix &lt;- Generate_Document_Word_Matrix(</div><div class="line">                       number_of_docs = ndoc,</div><div class="line">                       number_of_unique_words = n_unique_words,</div><div class="line">                       unique_words = unique_words,</div><div class="line">                       Document_Words = doc_list,</div><div class="line">                       Document_Lengths = doc_lengths</div><div class="line">                       )  </div><div class="line"><span class="comment">#' Make sure to add column names to you Doc-Term matrix, then take a look! </span></div><div class="line">colnames(Doc_Term_Matrix) &lt;- unique_words</div></pre></td></tr></table></figure>
+<h2 id="使用现有的文本处理包"><a href="#使用现有的文本处理包" class="headerlink" title="使用现有的文本处理包"></a>使用现有的文本处理包</h2><p>本教程主要集中于说明一些非常基本的工具，以及在必要的底层函数下生成文档-词矩阵。但是，也有更简单的方法来做到这一点。用于在 R 中（包括在多种语言下）进行文本处理的最全功能包之一是 <code>Quanteda</code> 包。如果我们要使用该包，需要先进行安装：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">install.packages(<span class="string">"quanteda"</span>,dependencies = <span class="literal">T</span>)</div></pre></td></tr></table></figure>
+<p>现在我们假设需要使用上述例子中的两段讲话。我们可以使用以下代码段生成文档-词矩阵：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#' Create a vector with one string per document:</span></div><div class="line"><span class="comment">#' document. These can be extracted from the cleaned text objects as follows.</span></div><div class="line">docs &lt;- c(paste0(text,collapse = <span class="string">" "</span>),paste0(text2,collapse = <span class="string">" "</span>)) </div><div class="line"><span class="comment">#' load the package and generate the document-term matrix</span></div><div class="line"><span class="keyword">require</span>(quanteda)</div><div class="line">doc_term_matrix &lt;- dfm(docs, stem = <span class="literal">FALSE</span>)</div><div class="line"><span class="comment">#' find the additional terms captured by quanteda</span></div><div class="line">missing &lt;- doc_term_matrix@Dimnames$features %<span class="keyword">in</span>% colnames(Doc_Term_Matrix)</div><div class="line"><span class="comment">#' We can see that our document term matrix now includes terms with - and ' included.</span></div><div class="line">doc_term_matrix@Dimnames$features[which(missing == <span class="number">0</span>)]</div></pre></td></tr></table></figure>
+<p>这当然比自己编写代码更容易且更有效率。一般来说，使用 <code>Quanteda</code> 来生成文档-词矩阵（以及 <code>vignettes</code> 包中许多其他用于文本统计分析的函数）对于融合大多数文本语料库很有帮助。 <code>Quanteda</code> 包的一个特别有用的功能是它自动将文本数据存储为稀疏矩阵对象，这往往比使用密集矩阵更加节省空间。然而，与此同时，<code>Quanteda</code> 要求用户能够一次性将他们希望处理的所有文档加载到R会话中的文档-词矩阵中。这通常不是什么大问题，但是对于一些非常大规模的文本处理应用，可能会有内存溢出的风险。</p>
+<p>我最近在开发一个可以解决文本预处理时内存不足的问题的包，并且封装了 <code>Stanford CoreNLP</code> 和 <code>MALLET</code> 包，为当前流行的技术提供了接口。这个包目前不像 <code>Quanteda</code> 包一样优秀，也不太可能会针对较小的语料库进行优化，但是对于对大型的 NLP 应用感兴趣，或是需要处理大型的语料库的用户来说，这将是一个不错的选择。目前该项目托管于 GitHub 上：<a href="https://github.com/matthewjdenny/SpeedReader." target="_blank" rel="external">SpeedReader</a>.</p>
+<p>感谢查看本教程，它将持续在2015年年底至2016年初更新，所以如果你对任何新的内容感兴趣，可以通过电子邮件联系我。如果你有兴趣尝试运行教程中的R代码，你可以在<a href="http://mjdenny.com/workshops/Text_Processing_in_R.R" target="_blank" rel="external">这里</a>下载 <code>.R</code> 文件。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/R语言/" rel="tag"># R语言</a>
+          
+            <a href="/tags/翻译/" rel="tag"># 翻译</a>
+          
+            <a href="/tags/文本挖掘/" rel="tag"># 文本挖掘</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/17/使用R搭建一个电影推荐引擎/" rel="next" title="使用R搭建一个电影推荐引擎">
+                <i class="fa fa-chevron-left"></i> 使用R搭建一个电影推荐引擎
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/04/Ubuntu 16.04下配置R语言开发环境/" rel="prev" title="Ubuntu 16.04下配置R语言开发环境">
+                Ubuntu 16.04下配置R语言开发环境 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="ElenoreZH" />
+          <p class="site-author-name" itemprop="name">ElenoreZH</p>
+           
+              <p class="site-description motion-element" itemprop="description">Your smart gets you slow. Young blood gets you old.</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ElenoreChang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/dearelenore" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/dearelenore/" target="_blank" title="Instagram">
+                  
+                    <i class="fa fa-fw fa-instagram"></i>
+                  
+                  Instagram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/xiaohanzh/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正则表达式"><span class="nav-number">2.</span> <span class="nav-text">正则表达式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#示例代码"><span class="nav-number">3.</span> <span class="nav-text">示例代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文本清理"><span class="nav-number">4.</span> <span class="nav-text">文本清理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构建文档-词矩阵"><span class="nav-number">5.</span> <span class="nav-text">构建文档-词矩阵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用现有的文本处理包"><span class="nav-number">6.</span> <span class="nav-text">使用现有的文本处理包</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ElenoreZH</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://ElenoreZH.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2017/02/02/使用R进行文本处理/';
+          this.page.identifier = '2017/02/02/使用R进行文本处理/';
+          this.page.title = '使用R进行文本处理';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://ElenoreZH.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

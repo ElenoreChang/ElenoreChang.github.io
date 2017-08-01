@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="R语言,数据挖掘,python," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="上篇文章从豆瓣爬取了《黄小厨和他的明星朋友们》又名《深夜食堂华语版》的影评，共 47650 条。这篇文章用这些数据来绘制一个词云。首先是我使用的工具和环境：  工具和环境 系统： ubuntu 16.04语言：R version 3.2.3IDE: RStudio 1.0.136  本来这篇文章是想用 R Markdown 来写的，可是在 Ubuntu 系统里面 RStudio 有不支持中文输入的">
+<meta name="keywords" content="R语言,数据挖掘,python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用R语言绘制《深夜食堂》影评词云图">
+<meta property="og:url" content="http://yoursite.com/2017/07/04/使用R语言绘制《深夜食堂》影评词云图/index.html">
+<meta property="og:site_name" content="张店长的博客">
+<meta property="og:description" content="上篇文章从豆瓣爬取了《黄小厨和他的明星朋友们》又名《深夜食堂华语版》的影评，共 47650 条。这篇文章用这些数据来绘制一个词云。首先是我使用的工具和环境：  工具和环境 系统： ubuntu 16.04语言：R version 3.2.3IDE: RStudio 1.0.136  本来这篇文章是想用 R Markdown 来写的，可是在 Ubuntu 系统里面 RStudio 有不支持中文输入的">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://i650.photobucket.com/albums/uu224/dearelenore/wordcloud_zpstcpvdcad.png">
+<meta property="og:image" content="https://img3.doubanio.com/view/photo/raw/public/p2355982221.jpg">
+<meta property="og:image" content="http://cos.name/wp-content/uploads/2016/08/20.png">
+<meta property="og:updated_time" content="2017-08-01T07:46:41.757Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用R语言绘制《深夜食堂》影评词云图">
+<meta name="twitter:description" content="上篇文章从豆瓣爬取了《黄小厨和他的明星朋友们》又名《深夜食堂华语版》的影评，共 47650 条。这篇文章用这些数据来绘制一个词云。首先是我使用的工具和环境：  工具和环境 系统： ubuntu 16.04语言：R version 3.2.3IDE: RStudio 1.0.136  本来这篇文章是想用 R Markdown 来写的，可是在 Ubuntu 系统里面 RStudio 有不支持中文输入的">
+<meta name="twitter:image" content="http://i650.photobucket.com/albums/uu224/dearelenore/wordcloud_zpstcpvdcad.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/07/04/使用R语言绘制《深夜食堂》影评词云图/"/>
+
+
+
+
+
+  <title>使用R语言绘制《深夜食堂》影评词云图 | 张店长的博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">张店长的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/04/使用R语言绘制《深夜食堂》影评词云图/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ElenoreZH">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="张店长的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">使用R语言绘制《深夜食堂》影评词云图</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-04T00:00:00+08:00">
+                2017-07-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/07/04/使用R语言绘制《深夜食堂》影评词云图/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/07/04/使用R语言绘制《深夜食堂》影评词云图/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="http://zhangxiaohan.me/index.php/2017/07/03/scrapyspider_douban_movie_comment_spider/" target="_blank" rel="external">上篇文章</a>从豆瓣爬取了《黄小厨和他的明星朋友们》又名《深夜食堂华语版》的影评，共 47650 条。这篇文章用这些数据来绘制一个词云。首先是我使用的工具和环境：</p>
+<blockquote>
+<p><strong>工具和环境</strong></p>
+<p>系统： ubuntu 16.04<br>语言：R version 3.2.3<br>IDE: RStudio 1.0.136</p>
+</blockquote>
+<p>本来这篇文章是想用 R Markdown 来写的，可是在 Ubuntu 系统里面 RStudio 有不支持中文输入的问题，而且一直没有找到有效的解决办法，所以只能放弃。而且从下面的代码里能看到，我的注释都是英文的…而且在上篇写爬虫的时候还遇到 sublime text 3 不能使用中文输入法的问题，同样也没有比较好的解决方法，真是气死人了。<br><a id="more"></a></p>
+<h2 id="文本挖掘的通用流程"><a href="#文本挖掘的通用流程" class="headerlink" title="文本挖掘的通用流程"></a>文本挖掘的通用流程</h2><p>做文本挖掘的一个比较通用的流程通常是这样的：</p>
+<h3 id="获取文本"><a href="#获取文本" class="headerlink" title="获取文本"></a>获取文本</h3><p>通常是通过爬虫来获取，或是找一些别人已经爬好的数据直接使用。</p>
+<h3 id="文本的预处理"><a href="#文本的预处理" class="headerlink" title="文本的预处理"></a>文本的预处理</h3><p>从网页爬取下来的数据通常会包含很多不必要的信息，比如会有很多空格、 “\n” 之类的，在这一步把真正有用的信息提取出来。还有如果爬取的数据有需要结构化的字段，在这一步也一并进行。比如日期字段、数值字段的处理。</p>
+<h3 id="导入自定义词典"><a href="#导入自定义词典" class="headerlink" title="导入自定义词典"></a>导入自定义词典</h3><p>这一步是为下一步分词做基础。因为现在的中文分词算法通常只包含一些常用词汇词典，对于包含一些人名、网络用语、专业用语的文本，只使用算法自带的词典往往不能准确的分类。</p>
+<h3 id="分词"><a href="#分词" class="headerlink" title="分词"></a>分词</h3><p>顾名思义，分词就是将一段文本拆分成多个词，英文的分词相对来说比较简单，通常词和词之间是以空格分隔的。相对来说中文的分词就复杂得多，但现在针对这项技术的研究也已经比较深入了，因此我们有许多现成的算法可供选择使用。在 R 语言中，比较常用的是 Rwordseg 和 JiebaR 两个包。</p>
+<h3 id="去除停用词"><a href="#去除停用词" class="headerlink" title="去除停用词"></a>去除停用词</h3><p>在分词的结果中包含大量的词汇，但是有些词是出现非常频繁但提供的信息量基本为0的，比如“的”、“了”等词。因此在这一步需要把这些词统统去除掉，以免影响后续的分析。目前比较常用的停用词表是哈工大停用词表、四川大学机器智能实验室停用词库和百度停用词列表，在此基础上，你还可以针对你分析的文本添加进你认为没有信息价值的词语。</p>
+<h3 id="词性标注"><a href="#词性标注" class="headerlink" title="词性标注"></a>词性标注</h3><p>对分词结果进行词性的标注（是名词、动词、形容词还是副词），但我认为这一步不是对所有类型的文本挖掘都必要。</p>
+<h3 id="文本的数据化"><a href="#文本的数据化" class="headerlink" title="文本的数据化"></a>文本的数据化</h3><p>这一步的目的是将上面获得的结果转化为结构性的数据，这样我们才能使用现有的数据挖掘、机器学习等方法来进行进一步的分析。比较简单的数据化方法是建立术语-文本矩阵，即术语和文本间基于频率的关系，以表格的形式表现，行表示术语，列表示文本，术语和文本间的频率以整数形式填在每个格里。其他还有将 TF-IDF（词频反文档频率）或 PMI （点互信息）作为权重的数据化方法。</p>
+<h3 id="数据挖掘"><a href="#数据挖掘" class="headerlink" title="数据挖掘"></a>数据挖掘</h3><p>经过上面的步骤我们将文本转化为了矩阵，接下来就可以利用各种数据挖掘、机器学习进行分析，比如进行情感分析、话题跟踪、文本相似度分析、聚类分析等等。</p>
+<h2 id="使用-R-语言绘制《深夜食堂》影评词云图"><a href="#使用-R-语言绘制《深夜食堂》影评词云图" class="headerlink" title="使用 R 语言绘制《深夜食堂》影评词云图"></a>使用 R 语言绘制《深夜食堂》影评词云图</h2><p>利用上面的步骤（其实没有用到最后一步），在 R 语言里面实现绘制《深夜食堂》词云图的代码如下：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">library</span>(stringr)</div><div class="line"><span class="keyword">library</span>(ggplot2)</div><div class="line"><span class="keyword">library</span>(ropencc)</div><div class="line"><span class="keyword">library</span>(Rwordseg)</div><div class="line"><span class="keyword">library</span>(tm)</div><div class="line"><span class="keyword">library</span>(wordcloud2)</div><div class="line"><span class="keyword">library</span>(Matrix) </div><div class="line"><span class="keyword">library</span>(htmlwidgets)</div><div class="line">setwd(<span class="string">"~/midnight_food_store_comment_analysis"</span>)</div><div class="line"><span class="comment">##read data##</span></div><div class="line"><span class="comment"># comments &lt;- read.csv(file = "comments.csv",</span></div><div class="line"><span class="comment">#                      header = TRUE,</span></div><div class="line"><span class="comment">#                      stringsAsFactors = FALSE)</span></div><div class="line"><span class="comment">##arrange data##</span></div><div class="line"><span class="comment"># comments &lt;- comments[, -7]</span></div><div class="line"><span class="comment"># </span></div><div class="line"><span class="comment"># comments$comment_time &lt;- str_trim(comments$comment_time)</span></div><div class="line"><span class="comment"># comments$comment_time &lt;- as.Date(comments$comment_time)</span></div><div class="line"><span class="comment"># </span></div><div class="line"><span class="comment"># comments$comment &lt;- str_trim(comments$comment)</span></div><div class="line"><span class="comment"># t2sConverter &lt;- converter(T2S)</span></div><div class="line"><span class="comment"># comments$comment &lt;- t2sConverter[comments$comment]</span></div><div class="line"><span class="comment"># </span></div><div class="line"><span class="comment"># comments$usefule_num &lt;- as.integer(comments$usefule_num)</span></div><div class="line"><span class="comment"># </span></div><div class="line"><span class="comment"># comments$ranking &lt;- factor(comments$ranking,</span></div><div class="line"><span class="comment">#                            levels = c("力荐", "推荐", "还行", "较差", "很差", ""),</span></div><div class="line"><span class="comment">#                            labels = as.character(5: 0))</span></div><div class="line"><span class="comment"># save(comments, file =  "comments.RData")</span></div><div class="line">load(<span class="string">"comments.RData"</span>)</div><div class="line"><span class="comment">##plot##</span></div><div class="line">p_ranking &lt;- ggplot(comments) +</div><div class="line">  geom_bar(aes(x = ranking, fill = ranking))</div><div class="line">p_ranking</div><div class="line">p_date &lt;- ggplot(comments) +</div><div class="line">  geom_bar(aes(x = comment_time, fill = ranking))</div><div class="line">p_date</div><div class="line"><span class="comment">##clean text##</span></div><div class="line">comment &lt;- gsub(<span class="string">"[a-zA-Z]"</span>, <span class="string">""</span>, comments$comment)   </div><div class="line">comment &lt;- gsub(<span class="string">"//."</span>, <span class="string">""</span>, comment)      </div><div class="line">comment &lt;- comment[!is.na(comment)]   </div><div class="line">comment &lt;- comment[!nchar(comment) &lt; <span class="number">2</span>]</div><div class="line"><span class="comment">##import dictionary##</span></div><div class="line">installDict(<span class="string">"dictionary/中华美食.scel"</span>,<span class="string">"food"</span>)</div><div class="line">installDict(<span class="string">"dictionary/本地明星.scel"</span>,<span class="string">"names"</span>)</div><div class="line">installDict(<span class="string">"dictionary/深夜食堂【官方推荐】.scel"</span>,<span class="string">"foodstore"</span>)</div><div class="line">my_dic &lt;- read.csv(file = <span class="string">"dictionary/mydict.csv"</span>,</div><div class="line">                   header = <span class="literal">TRUE</span>,</div><div class="line">                   stringsAsFactors = <span class="literal">FALSE</span>)</div><div class="line">my_dic &lt;- str_trim(my_dic[, <span class="number">1</span>])</div><div class="line">insertWords(my_dic)</div><div class="line"><span class="comment">##word seg##</span></div><div class="line">seg &lt;- segmentCN(comment) </div><div class="line"><span class="comment">##convert to corpus</span></div><div class="line">comment.seg &lt;- as.vector(seg)</div><div class="line">comment.corpus &lt;- Corpus(VectorSource(comment.seg))</div><div class="line"><span class="comment">##remove stopwords</span></div><div class="line">stopwords &lt;- read.table(<span class="string">"dictionary/stopwords.txt"</span>,</div><div class="line">                         header = <span class="literal">FALSE</span>,</div><div class="line">                         quote = <span class="string">""</span>,</div><div class="line">                         sep = <span class="string">"\n"</span>,</div><div class="line">                         stringsAsFactors = <span class="literal">FALSE</span>)</div><div class="line">stopwords &lt;- stopwords[, <span class="number">1</span>]</div><div class="line">comment.corpus &lt;- tm_map(comment.corpus, removeWords, stopwords)</div><div class="line"><span class="comment">##convert to TermDOcumentMatrix##</span></div><div class="line">tdm &lt;- TermDocumentMatrix(comment.corpus, control = list(wordLengths = c(<span class="number">2</span>, <span class="literal">Inf</span>)))</div><div class="line"><span class="comment"># save(tdm, file =  "term_document_matrix.RData")</span></div><div class="line"><span class="comment"># inspect(tdm[1:10, 1:2])</span></div><div class="line"><span class="comment">##convert to matrix, stored as sparse matrix##</span></div><div class="line">mat &lt;- sparseMatrix(i=tdm$i, j=tdm$j, x=tdm$v,</div><div class="line">                    dims=c(tdm$nrow, tdm$ncol))</div><div class="line">v &lt;- rowSums(mat)</div><div class="line">d &lt;- data.frame(word = tdm$dimnames$Terms, freq = v, </div><div class="line">                stringsAsFactors = <span class="literal">FALSE</span>)</div><div class="line"><span class="comment">##plot word cloud and save##</span></div><div class="line">graph &lt;- wordcloud2(d, size = <span class="number">1</span>, </div><div class="line">                    color = <span class="string">"darkblue"</span>,</div><div class="line">                    figPath = <span class="string">"深夜食堂.bmp"</span>, widgetsize = c(<span class="number">428</span>, <span class="number">921</span>)) </div><div class="line">saveWidget(graph,<span class="string">"tmp.html"</span>,selfcontained = <span class="literal">FALSE</span>)</div></pre></td></tr></table></figure>
+<p>不得不说 <code>wordcloud2</code> 这个包真是一个有情怀的包，为什么这么说呢，来看我最后画出来的词云：</p>
+<p><img src="http://i650.photobucket.com/albums/uu224/dearelenore/wordcloud_zpstcpvdcad.png" alt=""></p>
+<p>为了防止你们看不出来这是谁：</p>
+<p><img src="https://img3.doubanio.com/view/photo/raw/public/p2355982221.jpg" alt=""></p>
+<h2 id="中间遇到的问题及解决方案"><a href="#中间遇到的问题及解决方案" class="headerlink" title="中间遇到的问题及解决方案"></a>中间遇到的问题及解决方案</h2><p>别看最后只是出来了一个词云的结果，中间遇到了好多好多问题，还好都解决掉了。在这里记录一下：</p>
+<h3 id="繁简中文转换"><a href="#繁简中文转换" class="headerlink" title="繁简中文转换"></a>繁简中文转换</h3><p>看来豆瓣上面不止是有大陆的网友，也有不少港澳台同胞。我爬下来的影评数据里面还有不少是繁体字的。为了实现繁简中文转换，我使用了 <code>ropencc</code> 包，github 项目地址<a href="https://github.com/qinwf/ropencc" target="_blank" rel="external">戳这里</a>，这个包目前还没有发布到 <code>CRAN</code> ，需要使用 <code>devtools</code> 通过 Github 安装。具体教程在<a href="http://cn.qinwenfeng.com/ropencc/" target="_blank" rel="external">这篇文章</a>有比较详细的介绍。</p>
+<h3 id="获取外部词典"><a href="#获取外部词典" class="headerlink" title="获取外部词典"></a>获取外部词典</h3><p><code>Rwordseg</code> 包里面提供了一个 <code>installDict()</code> 方法，可以导入 <code>txt</code> 或者 <code>scel</code> 格式的词典，正好<a href="http://pinyin.sogou.com/dict/" target="_blank" rel="external">搜狗细胞词库</a>中提供 <code>scel</code> 格式的词库下载。为什么我的脚本可以准确地分出“泡面三姐妹”呢，因为搜狗上面竟然有一个官方推荐的深夜食堂词库！<br>可是遇到一些很高频出现的新演员人名，比如“吴昕”，很难找到相关的输入法词库，所以我又写了一个爬虫去<a href="http://baike.baidu.com/item/%E6%B7%B1%E5%A4%9C%E9%A3%9F%E5%A0%82/18664160#3" target="_blank" rel="external">百度百科</a>爬取整部电视剧的出演人员人名。。也是陷得有点深了。爬虫程序的代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="keyword">from</span> scrapy <span class="keyword">import</span> Request</div><div class="line"><span class="keyword">from</span> scrapy.spiders <span class="keyword">import</span> Spider</div><div class="line"><span class="keyword">from</span> movie_actors.items <span class="keyword">import</span> MovieActors</div><div class="line"><span class="keyword">import</span> re</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MFSCommentSpider</span><span class="params">(Spider)</span>:</span></div><div class="line">    name = <span class="string">"midnight_food_store_actors"</span> </div><div class="line">   </div><div class="line">    headers = &#123;</div><div class="line">        <span class="string">"User-Agent"</span>:<span class="string">"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.221 Safari/537.36 SE 2.X MetaSr 1.0"</span></div><div class="line">    &#125;</div><div class="line">    start_urls =  <span class="string">"http://baike.baidu.com/item/%E6%B7%B1%E5%A4%9C%E9%A3%9F%E5%A0%82/18664160#3_1"</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">start_requests</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">yield</span> Request(self.start_urls, callback=self.parse, </div><div class="line">                      headers=self.headers)</div><div class="line"> </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">        item = MovieActors()</div><div class="line">        actors = response.xpath(<span class="string">'//ul[@class="actorList"]/li[@class="listItem"]/dl/dt'</span>)</div><div class="line">        </div><div class="line">        <span class="keyword">for</span> actor <span class="keyword">in</span>  actors:</div><div class="line">            <span class="keyword">print</span> actor</div><div class="line">            item[<span class="string">'actor_name'</span>] = actor.xpath(<span class="string">'./a/text()'</span>).extract()</div><div class="line">            <span class="keyword">if</span> <span class="keyword">not</span> item[<span class="string">'actor_name'</span>]:</div><div class="line">                actor_role = actor.xpath(<span class="string">'./text()'</span>).extract()[<span class="number">0</span>].encode(<span class="string">'UTF-8'</span>)</div><div class="line">                item[<span class="string">'actor_name'</span>] = actor_role.split(<span class="string">'饰'</span>)[<span class="number">0</span>]</div><div class="line">            <span class="keyword">yield</span> item</div></pre></td></tr></table></figure>
+<h3 id="术语-文本矩阵转为矩阵内存不足"><a href="#术语-文本矩阵转为矩阵内存不足" class="headerlink" title="术语-文本矩阵转为矩阵内存不足"></a>术语-文本矩阵转为矩阵内存不足</h3><p>分词之后建立了一个术语-文本矩阵（Term Document Matrix），这个矩阵的维数是 16350 × 47215，在画图前需要把它转换成一个普通的矩阵，可以说是理所当然地报了一个错：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt; as.matrix(tdm)</div><div class="line">Error: cannot allocate vector of size <span class="number">5.8</span> G</div></pre></td></tr></table></figure>
+<p>这个矩阵是一个非常非常稀疏的矩阵，大部分都是 0，转成普通矩阵要给它 5.8 G内存，真是想得美。于是我用了 <code>Matrix</code>包把它用稀疏矩阵的形式存储，而且使用 <code>sparseMatrix()</code> 建立的这个对象可以进行正常矩阵的各种运算，可以说是非常方便了。</p>
+<h3 id="wordcloud2-词云无法按照输入图片展示"><a href="#wordcloud2-词云无法按照输入图片展示" class="headerlink" title="wordcloud2 词云无法按照输入图片展示"></a>wordcloud2 词云无法按照输入图片展示</h3><p><code>wordcloud2</code> 可以使用用户自定义的图片形状来生成文字图云，它需要的图片形式以及生成的效果大概是这样的：</p>
+<p><img src="http://cos.name/wp-content/uploads/2016/08/20.png" alt=""></p>
+<p>将图片的地址传给 <code>wordcloud2()</code> 中的 <code>figPath</code> 参数即可。可是在使用中却一直不能出现按照黄老师形象生成的词云图，后来查看了这个函数的源代码之后，发现是需要把 <code>widgetsize</code> 参数赋值为该图片的大小，这样问题就解决了。</p>
+<h3 id="segmentCN-的冲突"><a href="#segmentCN-的冲突" class="headerlink" title="segmentCN()的冲突"></a>segmentCN()的冲突</h3><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt; seg &lt;- segmentCN(comment)</div><div class="line">Error <span class="keyword">in</span> segmentCN(comment) : Package <span class="string">"jiebaR"</span> is required!</div></pre></td></tr></table></figure>
+<p>这个问题是我之前在工作的时候做文本挖掘遇到的，如果你同时用了 <code>tmcn</code> 和 <code>Rwordseg</code>，没有用 <code>jiebaR</code> 的话，在调用 <code>segmentCN()</code> 函数的时候就会报这个错误。原因是 <code>jiebaR</code> 和 <code>Rwordseg</code> 包中都有一个名为 <code>segmentCN()</code> 的函数，而 <code>tmcn</code> 包提供了一个调用 <code>jiebaR</code> 中该函数的接口，因此在运行这个函数的时候就起了冲突。我的解决方法是在运行该函数前先把 <code>tmcn</code> 包 <code>etach</code> 掉。这次代码中我没有用 <code>tmcn</code> 这个包，也就少了这个麻烦。不过 R 中应该有其他方法可以解决不同包中重名函数的问题，只是我目前还没有发现。<br>`</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/R语言/" rel="tag"># R语言</a>
+          
+            <a href="/tags/数据挖掘/" rel="tag"># 数据挖掘</a>
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/03/scrapy爬虫——爬取豆瓣影评/" rel="next" title="scrapy爬虫——爬取豆瓣影评">
+                <i class="fa fa-chevron-left"></i> scrapy爬虫——爬取豆瓣影评
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/11/博客搬家了/" rel="prev" title="博客搬家了">
+                博客搬家了 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="ElenoreZH" />
+          <p class="site-author-name" itemprop="name">ElenoreZH</p>
+           
+              <p class="site-description motion-element" itemprop="description">Your smart gets you slow. Young blood gets you old.</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ElenoreChang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/dearelenore" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/dearelenore/" target="_blank" title="Instagram">
+                  
+                    <i class="fa fa-fw fa-instagram"></i>
+                  
+                  Instagram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/xiaohanzh/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#文本挖掘的通用流程"><span class="nav-number">1.</span> <span class="nav-text">文本挖掘的通用流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#获取文本"><span class="nav-number">1.1.</span> <span class="nav-text">获取文本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文本的预处理"><span class="nav-number">1.2.</span> <span class="nav-text">文本的预处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#导入自定义词典"><span class="nav-number">1.3.</span> <span class="nav-text">导入自定义词典</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分词"><span class="nav-number">1.4.</span> <span class="nav-text">分词</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#去除停用词"><span class="nav-number">1.5.</span> <span class="nav-text">去除停用词</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#词性标注"><span class="nav-number">1.6.</span> <span class="nav-text">词性标注</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文本的数据化"><span class="nav-number">1.7.</span> <span class="nav-text">文本的数据化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据挖掘"><span class="nav-number">1.8.</span> <span class="nav-text">数据挖掘</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-R-语言绘制《深夜食堂》影评词云图"><span class="nav-number">2.</span> <span class="nav-text">使用 R 语言绘制《深夜食堂》影评词云图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#中间遇到的问题及解决方案"><span class="nav-number">3.</span> <span class="nav-text">中间遇到的问题及解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#繁简中文转换"><span class="nav-number">3.1.</span> <span class="nav-text">繁简中文转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取外部词典"><span class="nav-number">3.2.</span> <span class="nav-text">获取外部词典</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#术语-文本矩阵转为矩阵内存不足"><span class="nav-number">3.3.</span> <span class="nav-text">术语-文本矩阵转为矩阵内存不足</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wordcloud2-词云无法按照输入图片展示"><span class="nav-number">3.4.</span> <span class="nav-text">wordcloud2 词云无法按照输入图片展示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#segmentCN-的冲突"><span class="nav-number">3.5.</span> <span class="nav-text">segmentCN()的冲突</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ElenoreZH</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://ElenoreZH.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2017/07/04/使用R语言绘制《深夜食堂》影评词云图/';
+          this.page.identifier = '2017/07/04/使用R语言绘制《深夜食堂》影评词云图/';
+          this.page.title = '使用R语言绘制《深夜食堂》影评词云图';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://ElenoreZH.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

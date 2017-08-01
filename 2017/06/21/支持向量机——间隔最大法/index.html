@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="机器学习,学习笔记," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="一般来说，机器学习方法由三个要素组成：模型、 策略、算法。 对于监督算法来说，其中：   模型指的是所要学习的条件概率分布或决策函数； 策略指的是学习模信的准测或标准，即将从假设空间 FF 中确定最优模型 ff 转化为具体最优化问题的策略； 算法指的是学习模型的具体计算方法，通常为求解最优化模型的算法。   对于支持向量机（support vector machine, SVM）来说，它的基本模型">
+<meta name="keywords" content="机器学习,学习笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="支持向量机——间隔最大法">
+<meta property="og:url" content="http://yoursite.com/2017/06/21/支持向量机——间隔最大法/index.html">
+<meta property="og:site_name" content="张店长的博客">
+<meta property="og:description" content="一般来说，机器学习方法由三个要素组成：模型、 策略、算法。 对于监督算法来说，其中：   模型指的是所要学习的条件概率分布或决策函数； 策略指的是学习模信的准测或标准，即将从假设空间 FF 中确定最优模型 ff 转化为具体最优化问题的策略； 算法指的是学习模型的具体计算方法，通常为求解最优化模型的算法。   对于支持向量机（support vector machine, SVM）来说，它的基本模型">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2017-08-01T07:52:45.927Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="支持向量机——间隔最大法">
+<meta name="twitter:description" content="一般来说，机器学习方法由三个要素组成：模型、 策略、算法。 对于监督算法来说，其中：   模型指的是所要学习的条件概率分布或决策函数； 策略指的是学习模信的准测或标准，即将从假设空间 FF 中确定最优模型 ff 转化为具体最优化问题的策略； 算法指的是学习模型的具体计算方法，通常为求解最优化模型的算法。   对于支持向量机（support vector machine, SVM）来说，它的基本模型">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/21/支持向量机——间隔最大法/"/>
+
+
+
+
+
+  <title>支持向量机——间隔最大法 | 张店长的博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">张店长的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/21/支持向量机——间隔最大法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ElenoreZH">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="张店长的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">支持向量机——间隔最大法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-21T00:00:00+08:00">
+                2017-06-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/06/21/支持向量机——间隔最大法/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/06/21/支持向量机——间隔最大法/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>一般来说，机器学习方法由三个要素组成：<strong>模型</strong>、 <strong>策略</strong>、<strong>算法</strong>。</p>
+<p>对于监督算法来说，其中：</p>
+<blockquote>
+<ul>
+<li><strong>模型</strong>指的是所要学习的条件概率分布或决策函数；</li>
+<li><strong>策略</strong>指的是学习模信的准测或标准，即将从假设空间 FF 中确定最优模型 ff 转化为具体最优化问题的策略；</li>
+<li><strong>算法</strong>指的是学习模型的具体计算方法，通常为求解最优化模型的算法。</li>
+</ul>
+</blockquote>
+<p>对于支持向量机（support vector machine, SVM）来说，它的基本模型是定义在<strong>特征空间</strong>（不是输入空间）上的间隔最大的线性分类器；学习策略是几何间隔最大化，将求解最优模型转化为求解一个凸二次规划问题；学习算法是求解凸二次规划问题的最优化算法，通常使用的是序列最小最优化算法（SMO）.<br><a id="more"></a></p>
+<h2 id="支持向量机分类"><a href="#支持向量机分类" class="headerlink" title="支持向量机分类"></a>支持向量机分类</h2><p>按照模型的复杂程度，SVM可以分为：<strong>线性可分支持向量机</strong>、<strong>线性支持向量机</strong>和<strong>非线性支持向量机</strong>。</p>
+<ul>
+<li>线性可分支持向量机是线性支持向量机的特殊情况，对应的是训练数据线性可分的情况，学习策略为硬间隔最大化；</li>
+<li>当训练数据近似线性可分时，学习策略为软间隔最大化，可以理解为将硬间隔最大化的最优化问题的约束条件加上松弛；</li>
+<li>当训练数据线性不可分时，通过使用核技巧，将输入空间映射到特征中间中，在特征空间上使用软间隔最大化学习策略，学习非线性支持向量机。</li>
+</ul>
+<p>因此，理解支持向量机需要从几个方面入手，分别为: <strong>最大间隔法及其对偶问题</strong>以及<strong>核技巧</strong>。</p>
+<h2 id="最大间隔法"><a href="#最大间隔法" class="headerlink" title="最大间隔法"></a>最大间隔法</h2><p>线性可分支持向量机的定义为：<br>给定先行可分训练数据集，通过间隔最大或等价地求解相应的凸二次规划问题学习到的分离超平面为<br>w∗⋅x+b∗=0<br>w∗·x+b∗=0<br>以及相应的分类决策函数<br>f(x)=sign(w∗⋅x+b∗)<br>f(x)=sign(w∗·x+b∗)<br>称为线性可分支持向量机。<br>线性可分支持向量机对应着将训练数据中正负例正确划分且间隔最大的超平面。</p>
+<h3 id="函数间隔"><a href="#函数间隔" class="headerlink" title="函数间隔"></a>函数间隔</h3><p>函数间隔的定义为：<br>对于给定的训练数据集 TT 和超平面 (w,b)(w,b) ，定义超平面 (w,b)(w,b) 关于样本点 (xi,yi)(xi,yi) 的函数间隔为<br>γ^i=yi(w⋅xi+b)<br>γ^i=yi(w·xi+b)<br>定义超平面 (w,b)(w,b) 关于训练数据集 TT 的函数间隔为超平面 (w,b)(w,b) 关于 TT 中所有样本点 (xi,yi)(xi,yi) 的函数间隔的最小值，即<br>γ^=mini=1,…,Nγ^i<br>γ^=mini=1,…,N⁡γ^i</p>
+<p>在 γ^iγ^i 的表达式中，|w⋅x+b||w·x+b| 能够相对地表示点 xx 距离超平面的远近，而 y(w⋅x+b)y(w·x+b) 的符号可以用来表示点 xx 是否被该超平面正确分类，因此 γ^iγ^i 既可以表示分类的<strong>正确性</strong>，也可以表示分类的<strong>确定度</strong>。</p>
+<h3 id="几何间隔"><a href="#几何间隔" class="headerlink" title="几何间隔"></a>几何间隔</h3><p>对于给定的训练数据集 TT 和超平面 (w,b)(w,b)，定义超平面 (w,b)(w,b) 关于样本点 (xi,yi)(xi,yi) 的几何间隔为<br>γi=yi(w||w||⋅xi+b||w||)<br>γi=yi(w||w||·xi+b||w||)<br>同样地，超平面 (w,b)(w,b) 关于训练数据集 TT 的几何间隔为超平面 (w,b)(w,b) 关于 TT 中所有样本点 (xi,yi)(xi,yi) 的几何间隔的最小值，即<br>γ=mini=1,…,Nγi<br>γ=mini=1,…,N⁡γi</p>
+<p>几何间隔的定义表明，超平面 (w,b)(w,b) 关于样本点 (xi,yi)(xi,yi) 的几何间隔是实例点到超平面的带符号的距离，符号表示样本点 (xi,yi)(xi,yi) 是否被超平面 (w,b)(w,b) 正确分类。</p>
+<h3 id="间隔最大化"><a href="#间隔最大化" class="headerlink" title="间隔最大化"></a>间隔最大化</h3><p>按照几何间隔的定义，对训练数据集找到几何间隔最大的分类超平面意味着以充分大的确信度对训练数据进行分类。这样的超平面对未知的新实例也有很好的分类预测能力，具有结构风险小的特点。<br>求解几何间隔最大的分离超平面可以转化为以下的最优化问题：<br>maxw,bγ<br>maxw,b⁡γ<br>s.t.yi(w||w||⋅xi+b||w||)≥γ,i=1,…N<br>s.t.yi(w||w||·xi+b||w||)≥γ,i=1,…N</p>
+<p>该问题可以改写为<br>maxw,bγ^||w||<br>maxw,b⁡γ^||w||<br>s.t.yi(w⋅xi+b)≥γ^,i=1,…N<br>s.t.yi(w·xi+b)≥γ^,i=1,…N</p>
+<p>由于函数间隔 γ^γ^ 的取值对最优化问题的解没有影响，可以取 γ^=1γ^=1 来进一步简化上述优化问题：<br>minw,b12||w||2<br>minw,b⁡12||w||2<br>s.t.yi(w⋅xi+b)−1≥0,i=1,…N<br>s.t.yi(w·xi+b)−1≥0,i=1,…N</p>
+<p>在目标函数中对 ||w||||w|| 乘以系数 1212 是出于后面推导对偶问题求解梯度时方便考虑。<br>到此，求解线性可分支持向量机的问题转换为了上式表达的凸二次规划问题。</p>
+<h2 id="最大间隔法的对偶问题"><a href="#最大间隔法的对偶问题" class="headerlink" title="最大间隔法的对偶问题"></a>最大间隔法的对偶问题</h2><p>为了方便上述最优化问题的求解，将上述最优化问题作为原始最优化问题，通过求解其对偶问题得到原始问题的最优解，这样做同时还可以自然地引入核函数，从而将算法推广到非线性的分类问题。<br>对上述原始最优化问题中的每一个不等式约束引入拉格朗日乘子 αi≥0,i=1,2,…Nαi≥0,i=1,2,…N，构建拉格朗日函数：<br>L(w,b,α)=12||w||2−∑i=1Nαiyi(w⋅xi+b)+∑i=1Nαi<br>L(w,b,α)=12||w||2−∑i=1Nαiyi(w·xi+b)+∑i=1Nαi</p>
+<p>根据拉格朗日对偶性，原始问题的对偶问题是极大极小问题：<br>maxaminw,bL(w,b,α)<br>maxa⁡minw,b⁡L(w,b,α)</p>
+<p>在求解这个对偶问题的时候，需要先求 L(w,b,α)L(w,b,α) 对 w,bw,b 的极小，再求对 αα 的极大。此处省略对对偶问题的求解推导过程，得到的与之等价的对偶最优化问题为：<br>minα12∑i=1N∑j=1Nαiαjyiyj(xi⋅xj)−∑i=1Nαi<br>minα⁡12∑i=1N∑j=1Nαiαjyiyj(xi·xj)−∑i=1Nαi<br>s.t.∑i=1Nαiyi=0<br>s.t.∑i=1Nαiyi=0<br>αi≥0,i=1,2,…N<br>αi≥0,i=1,2,…N</p>
+<p>求出该对偶最优化问题对 αα 的解 α∗α∗ 后，可以由 α∗α∗ 求得原始最优化问题对 (w,b)(w,b) 的解 w∗,b∗w∗,b∗：<br>w∗=∑i=1Nα∗yixi<br>w∗=∑i=1Nα∗yixi<br>b∗=yi−∑i=1Nα∗yi(xi⋅xj)</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+          
+            <a href="/tags/学习笔记/" rel="tag"># 学习笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/21/鼓捣一个好用的markdown编辑器/" rel="next" title="鼓捣一个好用的markdown编辑器">
+                <i class="fa fa-chevron-left"></i> 鼓捣一个好用的markdown编辑器
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/03/scrapy爬虫——爬取豆瓣影评/" rel="prev" title="scrapy爬虫——爬取豆瓣影评">
+                scrapy爬虫——爬取豆瓣影评 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="ElenoreZH" />
+          <p class="site-author-name" itemprop="name">ElenoreZH</p>
+           
+              <p class="site-description motion-element" itemprop="description">Your smart gets you slow. Young blood gets you old.</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ElenoreChang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/dearelenore" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/dearelenore/" target="_blank" title="Instagram">
+                  
+                    <i class="fa fa-fw fa-instagram"></i>
+                  
+                  Instagram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/xiaohanzh/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#支持向量机分类"><span class="nav-number">1.</span> <span class="nav-text">支持向量机分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最大间隔法"><span class="nav-number">2.</span> <span class="nav-text">最大间隔法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#函数间隔"><span class="nav-number">2.1.</span> <span class="nav-text">函数间隔</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#几何间隔"><span class="nav-number">2.2.</span> <span class="nav-text">几何间隔</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#间隔最大化"><span class="nav-number">2.3.</span> <span class="nav-text">间隔最大化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最大间隔法的对偶问题"><span class="nav-number">3.</span> <span class="nav-text">最大间隔法的对偶问题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ElenoreZH</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://ElenoreZH.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2017/06/21/支持向量机——间隔最大法/';
+          this.page.identifier = '2017/06/21/支持向量机——间隔最大法/';
+          this.page.title = '支持向量机——间隔最大法';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://ElenoreZH.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="gagets," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="方案今天把博客从 WordPress 上搬到了 GitHub Pages 上来，因为 WordPress 后台打开实在太卡了，虽然后来改成了在本地用 MarkDown 写，但每次打开控制台、新建文章、粘贴还是要等进度条。因此我打算把博客搬到 GitHub Pages 上面。通常搭建在 GitHub Pages 上面的博客有两种方案，一种是使用 Jekyll， 另一种是使用 Hexo. 因为我已经看">
+<meta name="keywords" content="gagets">
+<meta property="og:type" content="article">
+<meta property="og:title" content="博客搬家了">
+<meta property="og:url" content="http://yoursite.com/2017/07/11/博客搬家了/index.html">
+<meta property="og:site_name" content="张店长的博客">
+<meta property="og:description" content="方案今天把博客从 WordPress 上搬到了 GitHub Pages 上来，因为 WordPress 后台打开实在太卡了，虽然后来改成了在本地用 MarkDown 写，但每次打开控制台、新建文章、粘贴还是要等进度条。因此我打算把博客搬到 GitHub Pages 上面。通常搭建在 GitHub Pages 上面的博客有两种方案，一种是使用 Jekyll， 另一种是使用 Hexo. 因为我已经看">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2017-08-01T05:41:53.134Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="博客搬家了">
+<meta name="twitter:description" content="方案今天把博客从 WordPress 上搬到了 GitHub Pages 上来，因为 WordPress 后台打开实在太卡了，虽然后来改成了在本地用 MarkDown 写，但每次打开控制台、新建文章、粘贴还是要等进度条。因此我打算把博客搬到 GitHub Pages 上面。通常搭建在 GitHub Pages 上面的博客有两种方案，一种是使用 Jekyll， 另一种是使用 Hexo. 因为我已经看">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/07/11/博客搬家了/"/>
+
+
+
+
+
+  <title>博客搬家了 | 张店长的博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">张店长的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/11/博客搬家了/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ElenoreZH">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="张店长的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">博客搬家了</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-11T00:00:00+08:00">
+                2017-07-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/07/11/博客搬家了/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/07/11/博客搬家了/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h3><p>今天把博客从 WordPress 上搬到了 GitHub Pages 上来，因为 WordPress 后台打开实在太卡了，虽然后来改成了在本地用 MarkDown 写，但每次打开控制台、新建文章、粘贴还是要等进度条。因此我打算把博客搬到 GitHub Pages 上面。<br>通常搭建在 GitHub Pages 上面的博客有两种方案，一种是使用 <a href="http://jekyllcn.com/" target="_blank" rel="external">Jekyll</a>， 另一种是使用 <a href="https://hexo.io/zh-cn/index.html" target="_blank" rel="external">Hexo</a>. 因为我已经看好了 Hexo 中一个叫做 <a href="http://theme-next.iissnan.com/" target="_blank" rel="external">Next</a> 的主题，所以我选用了 Hexo.<br><a id="more"></a></p>
+<h3 id="搬家过程中的问题"><a href="#搬家过程中的问题" class="headerlink" title="搬家过程中的问题"></a>搬家过程中的问题</h3><p>关于在 ubuntu 系统下搭建基于 GitHub Pages 和 Hexo 的个人博客方法在 Google 上可以搜出<a href="https://www.google.co.jp/search?q=ubuntu+github+pages+hexo&amp;oq=ubuntu++github+pages+hexo&amp;aqs=chrome..69i57.7329j0j4&amp;sourceid=chrome&amp;ie=UTF-8" target="_blank" rel="external">一大堆</a>，我就不复制粘贴这些教程了。主要是在配置过程中遇到许多问题，在这里列一下。</p>
+<h4 id="MathJax-和-Markdown-的兼容问题"><a href="#MathJax-和-Markdown-的兼容问题" class="headerlink" title="MathJax 和 Markdown 的兼容问题"></a>MathJax 和 Markdown 的兼容问题</h4><p>在我一篇<a href="http://zhangxiaohan.me/2017/06/21/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA%E2%80%94%E2%80%94%E9%97%B4%E9%9A%94%E6%9C%80%E5%A4%A7%E6%B3%95/" target="_blank" rel="external">关于支持向量机的学习笔记</a>中，使用了大量的 MathJax 编写的公式，等搬完一看傻眼了，有大约 50% 的公式都不能正常显示，Google 了一下发现是 Markdown 本身的特殊符号跟 Latex 中的符号产生了冲突。比如：</p>
+<p>在 Markdown 中 <code>_</code> 是斜体， 而在 Latex 中 <code>_</code> 表示下标的开始。<br>在 Markdown 中 <code>*</code> 是斜体， 而你有可能需要在公式中使用 <code>*</code> 作为上下标。<br>在 Markdown 中 <code>\\</code> 会被转义为 <code>\</code>，而 <code>\\</code> 在 Latex 中用做行间公式标志。<br>Google 出的多种解决方案，包括手动转义、使用保护代码块、把 Markdown 换成 Pandoc、把 <code>hexo-renderer-marked</code> 换成 <code>hexo-renderer-kramed</code>，我都试了，发现还是<a href="http://blog.csdn.net/emptyset110/article/details/50123231" target="_blank" rel="external">修改 Hexo 渲染源码</a>比较方便。</p>
+<h4 id="deploy-到-GitHub-后-css-js-404"><a href="#deploy-到-GitHub-后-css-js-404" class="headerlink" title="deploy 到 GitHub 后 css js 404"></a>deploy 到 GitHub 后 css js 404</h4><p>关于这个<a href="https://github.com/iissnan/hexo-theme-next/issues/1220" target="_blank" rel="external">问题</a>，官方给出的回复是：</p>
+<blockquote>
+<p>Thanks for reaching out! We recently updated to Jekyll v3.3, which ignores the vendor folder by default. If you’re not using Jekyll, you can add a .nojekyll file to the root of your repository to disable Jekyll from building your site. Once you do that, your site should build with your vendor folder.</p>
+</blockquote>
+<p>参考<a href="https://github.com/iissnan/hexo-theme-next/issues/1214#issuecomment-260847236" target="_blank" rel="external">这个方法</a>，在 <code>.deploy_git</code> 和 <code>source</code> 目录中添加 <code>.nojekyll</code> 空文件，并修改 <code>Hexo _config.yml</code> 配置文件，添加：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">include:</div><div class="line">  - .nojekyll</div></pre></td></tr></table></figure>
+<p>然后重新部署推送，就可以恢复了。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>今天的问题告诉我们：遇到开源项目出的问题，去项目页面查 <code>Issues</code> 比较快。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/gagets/" rel="tag"># gagets</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/04/使用R语言绘制《深夜食堂》影评词云图/" rel="next" title="使用R语言绘制《深夜食堂》影评词云图">
+                <i class="fa fa-chevron-left"></i> 使用R语言绘制《深夜食堂》影评词云图
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="ElenoreZH" />
+          <p class="site-author-name" itemprop="name">ElenoreZH</p>
+           
+              <p class="site-description motion-element" itemprop="description">Your smart gets you slow. Young blood gets you old.</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ElenoreChang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/dearelenore" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/dearelenore/" target="_blank" title="Instagram">
+                  
+                    <i class="fa fa-fw fa-instagram"></i>
+                  
+                  Instagram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/xiaohanzh/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#方案"><span class="nav-number">1.</span> <span class="nav-text">方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搬家过程中的问题"><span class="nav-number">2.</span> <span class="nav-text">搬家过程中的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#MathJax-和-Markdown-的兼容问题"><span class="nav-number">2.1.</span> <span class="nav-text">MathJax 和 Markdown 的兼容问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#deploy-到-GitHub-后-css-js-404"><span class="nav-number">2.2.</span> <span class="nav-text">deploy 到 GitHub 后 css js 404</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ElenoreZH</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://ElenoreZH.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2017/07/11/博客搬家了/';
+          this.page.identifier = '2017/07/11/博客搬家了/';
+          this.page.title = '博客搬家了';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://ElenoreZH.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

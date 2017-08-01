@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python,爬虫," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="最近用 scrapy 写了一个爬取豆瓣影评的爬虫。在这里把步骤以及解决相关问题的思路写一下。首先介绍一下我使用的工具和环境。  工具和环境 系统：ubuntu 16.4语言： python 2.7IDE： sublime text 3浏览器： Chrome爬虫框架：Scrapy 1.0.3  这篇文章主要介绍如何在 linux 系统下安装 scarpy， 如何编写一个简单的爬虫，以及如何处理登录豆">
+<meta name="keywords" content="python,爬虫">
+<meta property="og:type" content="article">
+<meta property="og:title" content="scrapy爬虫——爬取豆瓣影评">
+<meta property="og:url" content="http://yoursite.com/2017/07/03/scrapy爬虫——爬取豆瓣影评/index.html">
+<meta property="og:site_name" content="张店长的博客">
+<meta property="og:description" content="最近用 scrapy 写了一个爬取豆瓣影评的爬虫。在这里把步骤以及解决相关问题的思路写一下。首先介绍一下我使用的工具和环境。  工具和环境 系统：ubuntu 16.4语言： python 2.7IDE： sublime text 3浏览器： Chrome爬虫框架：Scrapy 1.0.3  这篇文章主要介绍如何在 linux 系统下安装 scarpy， 如何编写一个简单的爬虫，以及如何处理登录豆">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://i650.photobucket.com/albums/uu224/dearelenore/Screenshot%20from%202017-06-30%2010-49-24_zpscgcfmihb.png">
+<meta property="og:updated_time" content="2017-08-01T07:34:30.249Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="scrapy爬虫——爬取豆瓣影评">
+<meta name="twitter:description" content="最近用 scrapy 写了一个爬取豆瓣影评的爬虫。在这里把步骤以及解决相关问题的思路写一下。首先介绍一下我使用的工具和环境。  工具和环境 系统：ubuntu 16.4语言： python 2.7IDE： sublime text 3浏览器： Chrome爬虫框架：Scrapy 1.0.3  这篇文章主要介绍如何在 linux 系统下安装 scarpy， 如何编写一个简单的爬虫，以及如何处理登录豆">
+<meta name="twitter:image" content="http://i650.photobucket.com/albums/uu224/dearelenore/Screenshot%20from%202017-06-30%2010-49-24_zpscgcfmihb.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/07/03/scrapy爬虫——爬取豆瓣影评/"/>
+
+
+
+
+
+  <title>scrapy爬虫——爬取豆瓣影评 | 张店长的博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">张店长的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/03/scrapy爬虫——爬取豆瓣影评/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ElenoreZH">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="张店长的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">scrapy爬虫——爬取豆瓣影评</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-03T00:00:00+08:00">
+                2017-07-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/07/03/scrapy爬虫——爬取豆瓣影评/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/07/03/scrapy爬虫——爬取豆瓣影评/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近用 <code>scrapy</code> 写了一个爬取豆瓣影评的爬虫。在这里把步骤以及解决相关问题的思路写一下。首先介绍一下我使用的工具和环境。</p>
+<blockquote>
+<p><strong>工具和环境</strong></p>
+<p>系统：ubuntu 16.4<br>语言： python 2.7<br>IDE： sublime text 3<br>浏览器： Chrome<br>爬虫框架：Scrapy 1.0.3</p>
+</blockquote>
+<p>这篇文章主要介绍如何在 linux 系统下安装 <code>scarpy</code>， 如何编写一个简单的爬虫，以及如何处理登录豆瓣的问题。如果你有兴趣了解本文的爬虫代码，可以<a href="https://github.com/ElenoreChang/douban_movie_comment_spider" target="_blank" rel="external">戳这里</a>.<br><a id="more"></a></p>
+<h2 id="安装-Scrapy"><a href="#安装-Scrapy" class="headerlink" title="安装 Scrapy"></a>安装 Scrapy</h2><p>按照<a href="http://scrapy-chs.readthedocs.io/zh_CN/1.0/topics/ubuntu.html" target="_blank" rel="external">最新的官方文档</a>中的教程进行安装，注意不要使用 Ubuntu 提供的 <code>python-scrapy</code>，因为相较于最新版的 <code>Scrapy</code>，该包版本太旧，并且运行速度也较为缓慢。上述教程中使用的是 <a href="http://scrapinghub.com/" target="_blank" rel="external">Scrapinghub</a> 发布的 <code>apt-get</code> 可获取版本。<br>关于 <code>Scrapy</code> 的架构及各组建作用在官方文档中也有介绍。</p>
+<h3 id="新建-Scrapy-爬虫项目"><a href="#新建-Scrapy-爬虫项目" class="headerlink" title="新建 Scrapy 爬虫项目"></a>新建 Scrapy 爬虫项目</h3><p>在 terminal 中进入你为爬虫项目建立的目录中，运行以下命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scrapy startproject scrapyspider</div></pre></td></tr></table></figure>
+<p>这个命令会在该目录中创建以下结构的 scrapyspider 目录：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">scrapyspider/</div><div class="line">    scrapy.cfg</div><div class="line">    scrapyspider/</div><div class="line">        __init__.py</div><div class="line">        items.py</div><div class="line">        pipelines.py</div><div class="line">        settings.py</div><div class="line">        spiders/</div><div class="line">            __init__.py</div><div class="line">            ...</div></pre></td></tr></table></figure>
+<p>这些文件分别是:</p>
+<p><code>scrapy.cfg</code>: 项目配置文件。<br><code>tutorial/</code>: 该项目的 python 模块。之后您将在此加入代码。<br><code>tutorial/items.py</code>: 项目中的 item 文件。<br><code>tutorial/pipelines.py</code>: 项目中的 pipelines 文件。<br><code>tutorial/settings.py</code>: 项目的设置文件。<br><code>tutorial/spiders/</code>: 放置 spider 代码的目录。</p>
+<h3 id="声明-Item-类"><a href="#声明-Item-类" class="headerlink" title="声明 Item 类"></a>声明 Item 类</h3><p>在编写爬虫代码之前，需要先确定需要爬取的数据的结构，即需要哪些字段，观察待爬取的网页，看看哪些信息是需要保存下来的有用字段。</p>
+<p><img src="http://i650.photobucket.com/albums/uu224/dearelenore/Screenshot%20from%202017-06-30%2010-49-24_zpscgcfmihb.png" alt=""></p>
+<p>在这里，我希望获取的影评数据的字段包括：</p>
+<p><code>user_name</code>：撰写影评的用户名<br><code>user_id</code>：用户ID<br><code>comment_time</code>：评论时间<br><code>ranking</code>：评分<br><code>comment</code>：短评内容<br><code>useful_num</code>：被其他用户标记为“有用”的次数</p>
+<p>因此为了获得上述的结构性数据，我们需要在 <code>items.py</code> 中编写声明 Item 的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MovieCommentItem</span><span class="params">(scrapy.Item)</span>:</span></div><div class="line">	user_name = scrapy.Field()</div><div class="line">	user_id = scrapy.Field()</div><div class="line">	comment_time = scrapy.Field()</div><div class="line">	ranking = scrapy.Field()</div><div class="line">	comment = scrapy.Field()</div><div class="line">	usefule_num = scrapy.Field()</div></pre></td></tr></table></figure>
+<h3 id="编写爬虫代码"><a href="#编写爬虫代码" class="headerlink" title="编写爬虫代码"></a>编写爬虫代码</h3><p>在 <code>scrapyspider/spiders</code> 目录下新建一个爬虫文件，因为我将要爬取的是电影深夜食堂（中国版）的影评，我将其命名为 <code>midnight_food_store.py</code>.<br>在编写爬虫代码之前，需要先确定我们需要获取的信息位于待爬取网页的什么位置，如何定位它。在 Chrome 中打开待爬取页面，按 <code>F12</code> 打开开发者工具，检查网页的源代码，发现我们需要获取的每个短评都位于一个 <code>class</code> 为 <code>comment-item</code> 的 <code>div</code> 标签中。具体的爬虫代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="keyword">from</span> scrapy <span class="keyword">import</span> Request</div><div class="line"><span class="keyword">from</span> scrapy.spiders <span class="keyword">import</span> Spider</div><div class="line"><span class="keyword">from</span> scrapyspider.items <span class="keyword">import</span> MovieCommentItem</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MFSCommentSpider</span><span class="params">(Spider)</span>:</span></div><div class="line">    name = <span class="string">"midnight_food_store"</span></div><div class="line">   </div><div class="line">    headers = &#123;</div><div class="line">        <span class="string">'User-Agent'</span>: <span class="string">'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36'</span>,</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">        item = MovieCommentItem()</div><div class="line">        comments = response.xpath(<span class="string">'//div[@class="mod-bd"]/div[@class="comment-item"]'</span>)</div><div class="line">        <span class="keyword">for</span> content <span class="keyword">in</span> comments:</div><div class="line">            item[<span class="string">'user_name'</span>] = content.xpath(</div><div class="line">				<span class="string">'.//span[@class="comment-info"]/a/text()'</span>).extract()</div><div class="line">            item[<span class="string">'user_id'</span>] = content.xpath(</div><div class="line">				<span class="string">'.//span[@class="comment-info"]/a/@href'</span>).re(<span class="string">r'https://www.douban.com/people/*(.*)/'</span>)</div><div class="line">            item[<span class="string">'comment_time'</span>] = content.xpath(</div><div class="line">				<span class="string">'.//span[@class="comment-time "]/text()'</span>).extract()</div><div class="line">            item[<span class="string">'comment'</span>] = content.xpath(</div><div class="line">				<span class="string">'.//p/text()'</span>).extract()</div><div class="line">            item[<span class="string">'usefule_num'</span>] = content.xpath(</div><div class="line">				<span class="string">'.//span[@class="votes"]/text()'</span>).extract()</div><div class="line">            item[<span class="string">'ranking'</span>] = content.xpath(</div><div class="line">				<span class="string">'.//span[contains(@class,"allstar")]/@title'</span>).extract()</div><div class="line">            <span class="keyword">yield</span> item</div><div class="line">        next_url = response.xpath(<span class="string">'//a[@class="next"]/@href'</span>).extract()</div><div class="line">        <span class="keyword">if</span> next_url:</div><div class="line">            next_url = <span class="string">'https://movie.douban.com/subject/26411410/comments'</span> + next_url[<span class="number">0</span>]</div><div class="line">            <span class="keyword">yield</span> Request(next_url, headers=self.headers)</div></pre></td></tr></table></figure>
+<h3 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h3><p>上述代码基本实现了从豆瓣爬取影评的功能，且能够自动翻页。但是由于豆瓣有反爬虫的机制，对于没有登录的用户只能爬取十页内容。因此还需要爬虫在启动时能够登录豆瓣。为了解决这个问题，我依次尝试了三种方法，最后使用 cookie 保持登录状态的方法成功登录并爬取了影评数据。</p>
+<h4 id="方法1-：-简单登录"><a href="#方法1-：-简单登录" class="headerlink" title="方法1 ： 简单登录"></a>方法1 ： 简单登录</h4><p>按照官方推荐的方法，为了在启动爬虫时自动以 POST 登录豆瓣，需要重写 <code>start_request()</code> 方法，如下：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">def start_requests(self):</div><div class="line">        return [scrapy.Request("https://accounts.douban.com/login",meta=&#123;'cookiejar':1&#125;,callback=self.post_login)]</div><div class="line">def post_login(self,response):</div><div class="line">        print 'Let's go ...'</div><div class="line">        return [scrapy.FormRequest.from_response(response,</div><div class="line">            meta=&#123;'cookiejar':response.meta['cookiejar']&#125;,</div><div class="line">            headers = self.headers,</div><div class="line">            formdata = &#123;</div><div class="line">            'form_email':'your_email',</div><div class="line">            'form_password':'your_code'</div><div class="line">            &#125;,</div><div class="line">            callback = self.checkLogin,</div><div class="line">            dont_filter=True)]</div></pre></td></tr></table></figure>
+<p>起初使用该方法是可行的，但连续登录几次之后再次登录需要输入验证码，因此该方法失效。</p>
+<h4 id="方法2：半自动输入验证码"><a href="#方法2：半自动输入验证码" class="headerlink" title="方法2：半自动输入验证码"></a>方法2：半自动输入验证码</h4><p>通过查找谷歌发现一种手动输入验证码的方式，思路是在上一种方法的基础上，当多次登录出现验证码之后，将验证码图片保存到本地，然后手动查看并输入验证码。代码如下 ：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"># -*- coding: utf-8 -*-</div><div class="line"></div><div class="line">import scrapy</div><div class="line">from scrapy.http import Request,FormRequest</div><div class="line">import urllib</div><div class="line">from scrapyspider.items import MovieCommentItem</div><div class="line">class LoginSpider(scrapy.Spider):</div><div class="line">    name = 'login'</div><div class="line">    allowed_domains = ['douban.com']</div><div class="line">    #start_urls = ['http://douban.com/']</div><div class="line">    header = &#123;"User-Agent":"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.221 Safari/537.36 SE 2.X MetaSr 1.0"&#125;</div><div class="line">    def start_requests(self):</div><div class="line">        return [FormRequest("https://accounts.douban.com/login",headers=self.header,meta=&#123;"cookiejar":1&#125;,callback=self.parse)]</div><div class="line">    def parse(self, response):</div><div class="line">        captcha = response.xpath("//img[@id='captcha_image']/@src").extract()</div><div class="line">        if len(captcha) &gt; 0:</div><div class="line">            print("此时有验证码.")</div><div class="line">            localpath = "captcha.png"</div><div class="line">            urllib.urlretrieve(captcha[0],filename=localpath)</div><div class="line">            captchar_value = input("请到~/scrapy/scrapyspider/的captcha.png查看验证码是什么？")</div><div class="line">            data = &#123;</div><div class="line">                "captcha-solution":captchar_value,</div><div class="line">                "redir": "https://www.douban.com/people/undergroundsky/",</div><div class="line">                "form_email": "your_email",  #用户名</div><div class="line">                "form_password": "your_code",  #用户密码</div><div class="line">                "login": "登录",</div><div class="line">            &#125;</div><div class="line">        else:</div><div class="line">            data = &#123;</div><div class="line">                "redir": "https://www.douban.com/people/undergroundsky/",</div><div class="line">                "form_email": "your_email",</div><div class="line">                "form_password": "your_code,</div><div class="line">                "login": "登录",</div><div class="line">            &#125;</div><div class="line">        print("登陆中...")</div><div class="line">        return [FormRequest.from_response(response,</div><div class="line">                                          meta=&#123;"cookiejar":response.meta["cookiejar"]&#125;,</div><div class="line">                                          headers=self.header,</div><div class="line">                                          # 设置POST表单中的数据</div><div class="line">                                          formdata=data,</div><div class="line">                                          # 设置回调函数，此时回调函数为next()</div><div class="line">                                          callback=self.next,</div><div class="line">                                          )]</div><div class="line">    def next(self, response):</div><div class="line">        title = response.xpath("/html/head/title/text()").extract()[0]</div><div class="line">        print(title.encode('UTF-8'))</div></pre></td></tr></table></figure>
+<p>这个方法在出现验证码的时候可以成功登录，但是当使用该方法登录并爬取数据时会报错，而且 google 了很久也没有找到相应的解决办法，只能放弃该方法。</p>
+<h4 id="方法3：带-cookie-发出-Request-请求"><a href="#方法3：带-cookie-发出-Request-请求" class="headerlink" title="方法3：带 cookie 发出 Request 请求"></a>方法3：带 cookie 发出 Request 请求</h4><p>方法3采用的是<a href="http://kongtianyi.cn/2016/10/15/python/Scrapy-Lesson-5/?utm_source=tuicool&amp;utm_medium=referral" target="_blank" rel="external">这篇文章</a>中提出的通过配置 cookie 保持登录状态的方法，文章中也给出了该方法的原理：</p>
+<blockquote>
+<p>一般情况下，网站通过存放在客户端的一个被称作cookie的小文件来存放用户的登陆信息。在浏览器访问网站的时候，会把这个小文件发往服务器，然后服务器根据这个小文件确定你的身份，然后返回给你特定的信息。</p>
+</blockquote>
+<p>我们要做的就是尽量模拟浏览器的行为，在使用爬虫访问网站时也带上 cookie 来访问。</p>
+<p>该方法包括以下几个步骤：</p>
+<ol>
+<li>获取 cookie</li>
+<li>转换 cookie 的格式</li>
+<li>在 <code>settings.py</code> 中给 scrapy 配置 cookie</li>
+<li>编写爬虫文件</li>
+</ol>
+<p>按照原作者的第一步的方法从浏览器获取到的 cookie 是字符串格式的，而在 <code>scrapy</code> 中，配置 cookie 需要是字典格式的，因此该作者编写了一个脚本来进行转换：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">transCookie</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, cookie)</span>:</span></div><div class="line">        self.cookie = cookie</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">stringToDict</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="string">'''</span></div><div class="line">        将从浏览器上Copy来的cookie字符串转化为Scrapy能使用的Dict</div><div class="line">        :return:</div><div class="line">        '''</div><div class="line">        itemDict = &#123;&#125;</div><div class="line">        items = self.cookie.split(<span class="string">';'</span>)</div><div class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> items:</div><div class="line">            key = item.split(<span class="string">'='</span>)[<span class="number">0</span>].replace(<span class="string">' '</span>, <span class="string">''</span>)</div><div class="line">            value = item.split(<span class="string">'='</span>)[<span class="number">1</span>]</div><div class="line">            itemDict[key] = value</div><div class="line">        <span class="keyword">return</span> itemDict</div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</div><div class="line">    cookie = <span class="string">"你复制出的cookie"</span></div><div class="line">    trans = transCookie(cookie)</div><div class="line">    <span class="keyword">print</span> trans.stringToDict()</div></pre></td></tr></table></figure>
+<p>将上述脚本 <code>print</code> 出的字典格式的 cookie 复制到 <code>settings.py</code> 中，然后在爬虫文件中使爬虫发起带有 cookie 的 Request 请求， 就可以省去处理登录以及验证码的过程了。具体的教程可以点进原文查看。这个方法最终证实是有效的。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>使用上面方法编写的爬虫程序，我爬取了豆瓣上面关于国产版《深夜食堂》的 47650 条短评。使用这些数据，可以做一些基础的数据分析。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/爬虫/" rel="tag"># 爬虫</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/21/支持向量机——间隔最大法/" rel="next" title="支持向量机——间隔最大法">
+                <i class="fa fa-chevron-left"></i> 支持向量机——间隔最大法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/04/使用R语言绘制《深夜食堂》影评词云图/" rel="prev" title="使用R语言绘制《深夜食堂》影评词云图">
+                使用R语言绘制《深夜食堂》影评词云图 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="ElenoreZH" />
+          <p class="site-author-name" itemprop="name">ElenoreZH</p>
+           
+              <p class="site-description motion-element" itemprop="description">Your smart gets you slow. Young blood gets you old.</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ElenoreChang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/dearelenore" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/dearelenore/" target="_blank" title="Instagram">
+                  
+                    <i class="fa fa-fw fa-instagram"></i>
+                  
+                  Instagram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/xiaohanzh/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-Scrapy"><span class="nav-number">1.</span> <span class="nav-text">安装 Scrapy</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#新建-Scrapy-爬虫项目"><span class="nav-number">1.1.</span> <span class="nav-text">新建 Scrapy 爬虫项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#声明-Item-类"><span class="nav-number">1.2.</span> <span class="nav-text">声明 Item 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编写爬虫代码"><span class="nav-number">1.3.</span> <span class="nav-text">编写爬虫代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决问题"><span class="nav-number">1.4.</span> <span class="nav-text">解决问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#方法1-：-简单登录"><span class="nav-number">1.4.1.</span> <span class="nav-text">方法1 ： 简单登录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方法2：半自动输入验证码"><span class="nav-number">1.4.2.</span> <span class="nav-text">方法2：半自动输入验证码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方法3：带-cookie-发出-Request-请求"><span class="nav-number">1.4.3.</span> <span class="nav-text">方法3：带 cookie 发出 Request 请求</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">2.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ElenoreZH</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://ElenoreZH.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2017/07/03/scrapy爬虫——爬取豆瓣影评/';
+          this.page.identifier = '2017/07/03/scrapy爬虫——爬取豆瓣影评/';
+          this.page.title = 'scrapy爬虫——爬取豆瓣影评';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://ElenoreZH.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

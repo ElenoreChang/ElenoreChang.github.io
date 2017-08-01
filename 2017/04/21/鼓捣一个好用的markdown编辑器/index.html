@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="gagets," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="之前写算法文档一直用 word，但是 word + git 真是特别不方便使用， 所以打算用 markdown 来写。虽然博客文章都是用 markdown 写的，但计算机本地一直没有找到一个好用的 markdown 文本编辑器，今天总算让我鼓捣出来一个。我使用的编辑器是 notepad++，在此基础上增加了 markdown 的语法高亮，并安装了提供预览功能的插件。步骤如下：">
+<meta name="keywords" content="gagets">
+<meta property="og:type" content="article">
+<meta property="og:title" content="鼓捣一个好用的markdown编辑器">
+<meta property="og:url" content="http://yoursite.com/2017/04/21/鼓捣一个好用的markdown编辑器/index.html">
+<meta property="og:site_name" content="张店长的博客">
+<meta property="og:description" content="之前写算法文档一直用 word，但是 word + git 真是特别不方便使用， 所以打算用 markdown 来写。虽然博客文章都是用 markdown 写的，但计算机本地一直没有找到一个好用的 markdown 文本编辑器，今天总算让我鼓捣出来一个。我使用的编辑器是 notepad++，在此基础上增加了 markdown 的语法高亮，并安装了提供预览功能的插件。步骤如下：">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://raw.githubusercontent.com/Edditoria/markdown_npp/master/zenburn_theme/markdown_npp_zenburn_screenshot.png">
+<meta property="og:updated_time" content="2017-08-01T07:53:51.706Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="鼓捣一个好用的markdown编辑器">
+<meta name="twitter:description" content="之前写算法文档一直用 word，但是 word + git 真是特别不方便使用， 所以打算用 markdown 来写。虽然博客文章都是用 markdown 写的，但计算机本地一直没有找到一个好用的 markdown 文本编辑器，今天总算让我鼓捣出来一个。我使用的编辑器是 notepad++，在此基础上增加了 markdown 的语法高亮，并安装了提供预览功能的插件。步骤如下：">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Edditoria/markdown_npp/master/zenburn_theme/markdown_npp_zenburn_screenshot.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/21/鼓捣一个好用的markdown编辑器/"/>
+
+
+
+
+
+  <title>鼓捣一个好用的markdown编辑器 | 张店长的博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">张店长的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/21/鼓捣一个好用的markdown编辑器/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ElenoreZH">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="张店长的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">鼓捣一个好用的markdown编辑器</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-21T00:00:00+08:00">
+                2017-04-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/04/21/鼓捣一个好用的markdown编辑器/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/04/21/鼓捣一个好用的markdown编辑器/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>之前写算法文档一直用 word，但是 word + git 真是特别不方便使用， 所以打算用 markdown 来写。虽然博客文章都是用 markdown 写的，但计算机本地一直没有找到一个好用的 markdown 文本编辑器，今天总算让我鼓捣出来一个。我使用的编辑器是 notepad++，在此基础上增加了 markdown 的语法高亮，并安装了提供预览功能的插件。步骤如下：</p>
+<a id="more"></a>
+<h2 id="安装-notepad"><a href="#安装-notepad" class="headerlink" title="安装 notepad ++"></a>安装 notepad ++</h2><p>我安装的是 <a href="https://notepad-plus-plus.org/repository/7.x/7.3.3/npp.7.3.3.Installer.exe" target="_blank" rel="external">Notepad++ Installer 32-bit x86</a> 版本，因为:</p>
+<blockquote>
+<p>Note that the most of plugins (including Plugin Manager) are not yet available in x64 !</p>
+</blockquote>
+<h2 id="设置-markdown-语法高亮"><a href="#设置-markdown-语法高亮" class="headerlink" title="设置 markdown 语法高亮"></a>设置 markdown 语法高亮</h2><p>配置方法参考<a href="http://www.cnblogs.com/lewh/p/6075692.html" target="_blank" rel="external">此文</a> ，我使用了 <a href="https://github.com/Edditoria/markdown_npp" target="_blank" rel="external">Edditoria</a> 制作的 <code>markdown_npp_zenburn</code> 配色，看起来挺不错的。</p>
+<p><img src="https://raw.githubusercontent.com/Edditoria/markdown_npp/master/zenburn_theme/markdown_npp_zenburn_screenshot.png" alt=""></p>
+<h2 id="设置预览"><a href="#设置预览" class="headerlink" title="设置预览"></a>设置预览</h2><p>为了实现 markdown 的预览，我尝试了多个插件，包括 <code>NppMarkdown</code>, <code>MarkdownViewer++</code>，但因为它们可定制性比较差，主要体现在对 R 语言语法高亮展示不太好，最终我选择了 <a href="http://fossil.2of4.net/npp_preview/home" target="_blank" rel="external">Preview HTML</a>，配置方法参考<a href="http://www.annhe.net/article-3271.html" target="_blank" rel="external">此文</a>。<br>需要注意的是，在配置插件-设置过滤器那一步，需要将 <code>template=tpl.html5</code> 修改为 <code>tpl.html5</code> 在你电脑中的绝对目录，否则在启用插件预览的时候会报错：</p>
+<blockquote>
+<p>pandoc: Could not find data file templatestpl.html5</p>
+</blockquote>
+<p>当然了，改路径之前需要确保你的电脑中有 <code>tpl.html5</code> 这个文件，它为 HTML 预览指定样式。我没有使用这篇博客中给出的 HTML 代码做为我的样式（因为它不好看），我上网找了一个，代码如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html$if(lang)$</span> <span class="attr">lang</span>=<span class="string">"$lang$"</span>$<span class="attr">endif</span>$&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"generator"</span> <span class="attr">content</span>=<span class="string">"pandoc"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0, user-scalable=yes"</span>&gt;</span></div><div class="line">$for(author-meta)$</div><div class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"author"</span> <span class="attr">content</span>=<span class="string">"$author-meta$"</span>&gt;</span></div><div class="line">$endfor$</div><div class="line">$if(date-meta)$</div><div class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"dcterms.date"</span> <span class="attr">content</span>=<span class="string">"$date-meta$"</span>&gt;</span></div><div class="line">$endif$</div><div class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>$if(title-prefix)$$title-prefix$ - $endif$$pagetitle$<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">"text/css"</span>&gt;</span><span class="undefined">code&#123;white-space: pre;&#125;</span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></div><div class="line">  <span class="comment">&lt;!--[if lt IE 9]&gt;</span></div><div class="line">    &lt;script src="http://html5shim.googlecode.com/svn/trunk/html5.js"&gt;&lt;/script&gt;</div><div class="line">  &lt;![endif]--&gt;</div><div class="line">$if(quotes)$</div><div class="line">  <span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">"text/css"</span>&gt;</span><span class="undefined">q &#123; quotes: "“" "”" "‘" "’"; &#125;</span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></div><div class="line">$endif$</div><div class="line">$if(highlighting-css)$</div><div class="line">  <span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">"text/css"</span>&gt;</span><span class="undefined"></span></div><div class="line">$highlighting-css$</div><div class="line">  <span class="tag">&lt;/<span class="name">style</span>&gt;</span></div><div class="line">$endif$</div><div class="line">$for(css)$</div><div class="line">  <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"$css$"</span>&gt;</span></div><div class="line">$endfor$</div><div class="line">$if(math)$</div><div class="line">  $math$</div><div class="line">$endif$</div><div class="line">$for(header-includes)$</div><div class="line">  $header-includes$</div><div class="line">$endfor$</div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line">$for(include-before)$</div><div class="line">$include-before$</div><div class="line">$endfor$</div><div class="line">$if(title)$</div><div class="line"><span class="tag">&lt;<span class="name">header</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">h1</span> <span class="attr">class</span>=<span class="string">"title"</span>&gt;</span>$title$</div><div class="line">$if(subtitle)$</div><div class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">small</span> <span class="attr">class</span>=<span class="string">"subtitle"</span>&gt;</span>$subtitle$<span class="tag">&lt;/<span class="name">small</span>&gt;</span></div><div class="line">$endif$</div><div class="line"><span class="tag">&lt;/<span class="name">h1</span>&gt;</span></div><div class="line">$for(author)$</div><div class="line"><span class="tag">&lt;<span class="name">h2</span> <span class="attr">class</span>=<span class="string">"author"</span>&gt;</span>$author$<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></div><div class="line">$endfor$</div><div class="line">$if(date)$</div><div class="line"><span class="tag">&lt;<span class="name">h3</span> <span class="attr">class</span>=<span class="string">"date"</span>&gt;</span>$date$<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></div><div class="line">$endif$</div><div class="line"><span class="tag">&lt;/<span class="name">header</span>&gt;</span></div><div class="line">$endif$</div><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"pure-g"</span>&gt;</span></div><div class="line">$if(toc)$</div><div class="line"><span class="tag">&lt;<span class="name">nav</span> <span class="attr">class</span>=<span class="string">"toc pure-u-md-1-4 pure-u-1"</span>&gt;</span></div><div class="line">$toc$</div><div class="line"><span class="tag">&lt;/<span class="name">nav</span>&gt;</span></div><div class="line">$endif$</div><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"content pure-u-md-3-4 pure-u-1"</span>&gt;</span></div><div class="line">$body$</div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">$for(include-after)$</div><div class="line">$include-after$</div><div class="line">$endfor$</div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>完成上面几步，你就可以在本地编辑并预览 markdown 文档啦</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/gagets/" rel="tag"># gagets</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/04/Ubuntu 16.04下配置R语言开发环境/" rel="next" title="Ubuntu 16.04下配置R语言开发环境">
+                <i class="fa fa-chevron-left"></i> Ubuntu 16.04下配置R语言开发环境
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/21/支持向量机——间隔最大法/" rel="prev" title="支持向量机——间隔最大法">
+                支持向量机——间隔最大法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="ElenoreZH" />
+          <p class="site-author-name" itemprop="name">ElenoreZH</p>
+           
+              <p class="site-description motion-element" itemprop="description">Your smart gets you slow. Young blood gets you old.</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ElenoreChang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/dearelenore" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/dearelenore/" target="_blank" title="Instagram">
+                  
+                    <i class="fa fa-fw fa-instagram"></i>
+                  
+                  Instagram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/xiaohanzh/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-notepad"><span class="nav-number">1.</span> <span class="nav-text">安装 notepad ++</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置-markdown-语法高亮"><span class="nav-number">2.</span> <span class="nav-text">设置 markdown 语法高亮</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置预览"><span class="nav-number">3.</span> <span class="nav-text">设置预览</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ElenoreZH</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://ElenoreZH.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2017/04/21/鼓捣一个好用的markdown编辑器/';
+          this.page.identifier = '2017/04/21/鼓捣一个好用的markdown编辑器/';
+          this.page.title = '鼓捣一个好用的markdown编辑器';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://ElenoreZH.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

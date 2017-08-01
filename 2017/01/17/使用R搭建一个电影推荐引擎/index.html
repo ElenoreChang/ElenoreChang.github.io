@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="R语言,数据挖掘,翻译," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="原文：BUILDING A MOVIE RECOMMENDATION ENGINE WITH R 常见的机器学习课程（比如Udacity Course）建议的第一个小项目通常就是推荐引擎，因此我打算做一个电影的推荐引擎。在这篇文章中，我将尝试应用基于内容过滤方法及协同过滤方法来搭建一个基本的电影推荐引擎。 数据集我所使用的数据集来自 MovieLens，数据可以从此处下载。为了使这个推荐引擎尽可能">
+<meta name="keywords" content="R语言,数据挖掘,翻译">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用R搭建一个电影推荐引擎">
+<meta property="og:url" content="http://yoursite.com/2017/01/17/使用R搭建一个电影推荐引擎/index.html">
+<meta property="og:site_name" content="张店长的博客">
+<meta property="og:description" content="原文：BUILDING A MOVIE RECOMMENDATION ENGINE WITH R 常见的机器学习课程（比如Udacity Course）建议的第一个小项目通常就是推荐引擎，因此我打算做一个电影的推荐引擎。在这篇文章中，我将尝试应用基于内容过滤方法及协同过滤方法来搭建一个基本的电影推荐引擎。 数据集我所使用的数据集来自 MovieLens，数据可以从此处下载。为了使这个推荐引擎尽可能">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://muffynomster.files.wordpress.com/2015/06/screen-shot-2015-05-31-at-1-46-17-am.png">
+<meta property="og:image" content="https://muffynomster.files.wordpress.com/2015/06/screen-shot-2015-05-31-at-1-49-01-am.png">
+<meta property="og:image" content="https://muffynomster.files.wordpress.com/2015/06/screen-shot-2015-06-04-at-6-43-41-pm.png">
+<meta property="og:image" content="https://muffynomster.files.wordpress.com/2015/06/screen-shot-2015-06-04-at-7-00-08-pm.png">
+<meta property="og:image" content="https://muffynomster.files.wordpress.com/2015/06/screen-shot-2015-06-05-at-7-05-17-pm.png">
+<meta property="og:image" content="https://muffynomster.files.wordpress.com/2015/06/screen-shot-2015-06-05-at-7-12-24-pm.png">
+<meta property="og:image" content="https://muffynomster.files.wordpress.com/2015/06/screen-shot-2015-06-07-at-12-20-12-am.png">
+<meta property="og:image" content="https://muffynomster.files.wordpress.com/2015/06/screen-shot-2015-06-07-at-12-29-15-am.png">
+<meta property="og:image" content="https://muffynomster.files.wordpress.com/2015/06/screen-shot-2015-06-07-at-12-53-48-am.png">
+<meta property="og:image" content="https://muffynomster.files.wordpress.com/2015/06/screen-shot-2015-06-07-at-1-04-25-am.png">
+<meta property="og:image" content="https://muffynomster.files.wordpress.com/2015/06/screen-shot-2015-06-07-at-1-16-05-am.png">
+<meta property="og:updated_time" content="2017-08-01T07:16:39.805Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用R搭建一个电影推荐引擎">
+<meta name="twitter:description" content="原文：BUILDING A MOVIE RECOMMENDATION ENGINE WITH R 常见的机器学习课程（比如Udacity Course）建议的第一个小项目通常就是推荐引擎，因此我打算做一个电影的推荐引擎。在这篇文章中，我将尝试应用基于内容过滤方法及协同过滤方法来搭建一个基本的电影推荐引擎。 数据集我所使用的数据集来自 MovieLens，数据可以从此处下载。为了使这个推荐引擎尽可能">
+<meta name="twitter:image" content="https://muffynomster.files.wordpress.com/2015/06/screen-shot-2015-05-31-at-1-46-17-am.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/01/17/使用R搭建一个电影推荐引擎/"/>
+
+
+
+
+
+  <title>使用R搭建一个电影推荐引擎 | 张店长的博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">张店长的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/01/17/使用R搭建一个电影推荐引擎/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ElenoreZH">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="张店长的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">使用R搭建一个电影推荐引擎</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-17T00:00:00+08:00">
+                2017-01-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/01/17/使用R搭建一个电影推荐引擎/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/01/17/使用R搭建一个电影推荐引擎/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>原文：<a href="https://muffynomster.wordpress.com/2015/06/07/building-a-movie-recommendation-engine-with-r/" target="_blank" rel="external">BUILDING A MOVIE RECOMMENDATION ENGINE WITH R</a></p>
+<p>常见的机器学习课程（比如<a href="https://www.udacity.com/course/machine-learning-unsupervised-learning--ud741" target="_blank" rel="external">Udacity Course</a>）建议的第一个小项目通常就是推荐引擎，因此我打算做一个电影的推荐引擎。在这篇文章中，我将尝试应用基于内容过滤方法及协同过滤方法来搭建一个基本的电影推荐引擎。</p>
+<h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p>我所使用的数据集来自 MovieLens，数据可以从<a href="http://grouplens.org/datasets/movielens/" target="_blank" rel="external">此处</a>下载。为了使这个推荐引擎尽可能的简单，我使用了最小的数据集 (<code>ml-latest-small.zip</code>) ——来自于706个用户对8,570部电影的100,000个电影评分。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt;str(movies)</div><div class="line"><span class="string">'data.frame'</span>: <span class="number">8570</span> obs. of <span class="number">3</span> variables:</div><div class="line">$ movieId: int <span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">5</span> <span class="number">6</span> <span class="number">7</span> <span class="number">8</span> <span class="number">9</span> <span class="number">10</span> …</div><div class="line">$ title : chr <span class="string">"Toy Story (1995)"</span> <span class="string">"Jumanji (1995)"</span> <span class="string">"Grumpier Old Men (1995)"</span>…</div><div class="line">$ genres : chr <span class="string">"Adventure|Animation|Children|Comedy|Fantasy"</span>…</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<p><img src="https://muffynomster.files.wordpress.com/2015/06/screen-shot-2015-05-31-at-1-46-17-am.png" alt=""></p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt;str(ratings)</div><div class="line">‘data.frame’: <span class="number">100023</span> obs. of <span class="number">3</span> variables:</div><div class="line">$ userId : int <span class="number">1</span> <span class="number">1</span> <span class="number">1</span> <span class="number">1</span> <span class="number">1</span> <span class="number">1</span> <span class="number">1</span> <span class="number">1</span> <span class="number">1</span> <span class="number">1</span> …</div><div class="line">$ movieId : int <span class="number">6</span> <span class="number">22</span> <span class="number">32</span> <span class="number">50</span> <span class="number">110</span> <span class="number">164</span> <span class="number">198</span> <span class="number">260</span> <span class="number">296</span> <span class="number">303</span> …</div><div class="line">$ rating : num <span class="number">2</span> <span class="number">3</span> <span class="number">2</span> <span class="number">5</span> <span class="number">4</span> <span class="number">3</span> <span class="number">3</span> <span class="number">5</span> <span class="number">4</span> <span class="number">3</span> …</div></pre></td></tr></table></figure>
+<p><img src="https://muffynomster.files.wordpress.com/2015/06/screen-shot-2015-05-31-at-1-49-01-am.png" alt=""></p>
+<h2 id="基于内容过滤方法"><a href="#基于内容过滤方法" class="headerlink" title="基于内容过滤方法"></a>基于内容过滤方法</h2><p>如方法名称所表达的相同，<strong>基于内容过滤</strong>方法包括分析与用户相作用的条目，并给出在<strong>内容</strong>上与该条目相似的推荐结果。在这里，<strong>内容</strong>指的是描述条目的一系列<strong>属性</strong>或<strong>特征</strong>。<br>对于一个电影推荐引擎来说，<strong>基于内容</strong>的方法将会推荐在电影流派、演员、导演、出品年份等特征方面<strong>最相似</strong>的电影。这里假设了用户倾向于某一种固定类型的物品，因此我们试图推荐给该用户的，是与他已经表示过喜爱的物品相类似的物品。此外，我们的目的是给予用户除他已观看过的电影之外的<strong>替代品</strong>。<br>在这篇文章中 ，我将搭建一个最基本的基于内容的推荐引擎，只考虑<em>电影流派</em>一个属性。在更复杂的推荐引擎中，应使用多种属性，并对更重要的属性给予更高的权重。通过<a href="https://www.wikiwand.com/zh-hans/TF-IDF" target="_blank" rel="external">TF-IDF算法</a>（Term Frequency–Inverse Document Frequency algorithm）可以实现上述思路。对于搭建一个简单的基于内容的推荐引擎来说，用户资料对于确定该用户的偏好趋势是必不可少的，并且可以通过用户的偏好及观看行为来构建。</p>
+<h3 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h3><p>为了获取电影特征矩阵，电影数据集中用竖线分割的流派应先被分离出来。<code>data.table</code> 包中有一个  <code>tstrsplit()</code> 函数可以很好的应用于分离字符串。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">genres &lt;- as.data.frame(movies$genres, stringsAsFactors=<span class="literal">FALSE</span>)</div><div class="line"><span class="keyword">library</span>(data.table)</div><div class="line">genres2 &lt;- as.data.frame(tstrsplit(genres[,<span class="number">1</span>], <span class="string">'[|]'</span>, type.convert=<span class="literal">TRUE</span>), stringsAsFactors=<span class="literal">FALSE</span>)</div><div class="line">colnames(genres2) &lt;- c(<span class="number">1</span>:<span class="number">7</span>)</div></pre></td></tr></table></figure>
+<p>这将使我们获得一个如下所示的矩阵，基本上与 <code>movie$genres</code> 相同，但每一种 <code>genre</code> 被分离到不同的列中了。</p>
+<p><img src="https://muffynomster.files.wordpress.com/2015/06/screen-shot-2015-06-04-at-6-43-41-pm.png" alt=""></p>
+<p>然后构建一个将每一种电影流派作为列的矩阵，并标记出每一种电影流派是否在每一部电影中。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">genre_list &lt;- c(<span class="string">"Action"</span>, <span class="string">"Adventure"</span>, <span class="string">"Animation"</span>, <span class="string">"Children"</span>, <span class="string">"Comedy"</span>, <span class="string">"Crime"</span>,<span class="string">"Documentary"</span>, <span class="string">"Drama"</span>, <span class="string">"Fantasy"</span>,<span class="string">"Film-Noir"</span>, <span class="string">"Horror"</span>, <span class="string">"Musical"</span>, <span class="string">"Mystery"</span>,<span class="string">"Romance"</span>,<span class="string">"Sci-Fi"</span>, <span class="string">"Thriller"</span>, <span class="string">"War"</span>, <span class="string">"Western"</span>)</div><div class="line"> </div><div class="line">genre_matrix &lt;- matrix(<span class="number">0</span>,<span class="number">8571</span>,<span class="number">18</span>) <span class="comment">#empty matrix</span></div><div class="line">genre_matrix[<span class="number">1</span>,] &lt;- genre_list <span class="comment">#set first row to genre list</span></div><div class="line">colnames(genre_matrix) &lt;- genre_list <span class="comment"># set column names to genre list</span></div><div class="line"> </div><div class="line"><span class="comment"># iterate through matrix</span></div><div class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">1</span>:nrow(genres2)) &#123;</div><div class="line"> <span class="keyword">for</span> (c <span class="keyword">in</span> <span class="number">1</span>:ncol(genres2)) &#123;</div><div class="line"> genmat_col = which(genre_matrix[<span class="number">1</span>,] == genres2[i,c])</div><div class="line"> genre_matrix[i+<span class="number">1</span>,genmat_col] &lt;- <span class="number">1</span></div><div class="line"> &#125;</div><div class="line">&#125;</div><div class="line"> </div><div class="line"><span class="comment"># convert into dataframe</span></div><div class="line">genre_matrix2 &lt;- as.data.frame(genre_matrix[-<span class="number">1</span>,], stringsAsFactors=<span class="literal">FALSE</span>) <span class="comment">#remove first row, which was the genre list</span></div><div class="line"><span class="keyword">for</span> (c <span class="keyword">in</span> <span class="number">1</span>:ncol(genre_matrix2)) &#123;</div><div class="line">  genre_matrix2[,c] &lt;- as.integer(genre_matrix2[,c])</div><div class="line">&#125; <span class="comment">#convert from characters to integers</span></div></pre></td></tr></table></figure>
+<p>我们现在获得了电影流派的矩阵。每一列表示每一种不同的电影流派，每一行是每一部不同的电影。数据集现在如下表所示。我们有18个不同的类型及8570部不同的电影。</p>
+<p><img src="https://muffynomster.files.wordpress.com/2015/06/screen-shot-2015-06-04-at-7-00-08-pm.png" alt=""></p>
+<p>现在，我们需要构建一个用户资料矩阵。使用 <code>reshape2</code> 中的 <code>dcast()</code> 函数可以很轻松地做到这点。为了简单起见，我首先将评分转换为一个二元格式，评分在4~5之间的映射为1，表示喜欢；而评分在3及3以下的映射为-1，表示不喜欢。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">binaryratings &lt;- ratings</div><div class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">1</span>:nrow(binaryratings))&#123;</div><div class="line"> <span class="keyword">if</span> (binaryratings[i,<span class="number">3</span>] &gt; <span class="number">3</span>)&#123;</div><div class="line">   binaryratings[i,<span class="number">3</span>] &lt;- <span class="number">1</span></div><div class="line"> &#125;</div><div class="line"> <span class="keyword">else</span>&#123;</div><div class="line">   binaryratings[i,<span class="number">3</span>] &lt;- -<span class="number">1</span></div><div class="line"> &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>目前二元制评分的数据集如下所示：</p>
+<p><img src="https://muffynomster.files.wordpress.com/2015/06/screen-shot-2015-06-05-at-7-05-17-pm.png" alt=""></p>
+<p>为了将这个二元评分矩阵转换为我们需要的格式，我使用了 <code>reshape2</code>  包中的 <code>dcast()</code> 函数，将数据从长数据的格式转换为宽数据的格式，这个操作也会产生许多 <code>NA</code> ，因为并不是每个用户对每个电影都进行过打分。我将 <code>NA</code> 都替换成了0.</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">binaryratings2 &lt;- dcast(binaryratings, movieId~userId, value.var = <span class="string">"rating"</span>, na.rm=<span class="literal">FALSE</span>)</div><div class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">1</span>:ncol(binaryratings2))&#123;</div><div class="line">  binaryratings2[which(is.na(binaryratings2[,i]) == <span class="literal">TRUE</span>),i] &lt;- <span class="number">0</span></div><div class="line">&#125;</div><div class="line">binaryratings2 = binaryratings2[,-<span class="number">1</span>] <span class="comment">#remove movieIds col. Rows are movieIds, cols are userIds</span></div></pre></td></tr></table></figure>
+<p>现在我们将二元评分矩阵转换成了正确的格式。该矩阵由8552行，分别代表每一部电影ID；706列，分别表示每一个用户ID. 该矩阵大概如下所示：</p>
+<p><img src="https://muffynomster.files.wordpress.com/2015/06/screen-shot-2015-06-05-at-7-12-24-pm.png" alt=""></p>
+<p>为了构建简单的用户资料矩阵，我计算了电影流派矩阵和二元评分矩阵的数量积。在进行点乘运算之前，需要注意的是电影数据集由8570部电影组成，但评分数据集只有8552部电影。为解决该问题，我将未出现在评分矩阵中的电影从电影流派矩阵中剔除出去了。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#Remove rows that are not rated from movies dataset</span></div><div class="line">movieIds &lt;- length(unique(movies$movieId)) <span class="comment">#8570</span></div><div class="line">ratingmovieIds &lt;- length(unique(ratings$movieId)) <span class="comment">#8552</span></div><div class="line">movies2 &lt;- movies[-which((movieIds %<span class="keyword">in</span>% ratingmovieIds) == <span class="literal">FALSE</span>),]</div><div class="line">rownames(movies2) &lt;- <span class="literal">NULL</span></div><div class="line"><span class="comment">#Remove rows that are not rated from genre_matrix2</span></div><div class="line">genre_matrix3 &lt;- genre_matrix2[-which((movieIds %<span class="keyword">in</span>% ratingmovieIds) == <span class="literal">FALSE</span>),]</div><div class="line">rownames(genre_matrix3) &lt;- <span class="literal">NULL</span></div></pre></td></tr></table></figure>
+<p>现在我们可以计算电影流派矩阵和评分矩阵的数量积，从而获取用户资料了。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#Calculate dot product for User Profiles</span></div><div class="line">result = matrix(<span class="number">0</span>,<span class="number">18</span>,<span class="number">706</span>)</div><div class="line"><span class="keyword">for</span> (c <span class="keyword">in</span> <span class="number">1</span>:ncol(binaryratings2))&#123;</div><div class="line">  <span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">1</span>:ncol(genre_matrix3))&#123;</div><div class="line">    result[i,c] &lt;- sum((genre_matrix3[,i]) * (binaryratings2[,c]))</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"> </div><div class="line"><span class="comment">#Convert to Binary scale</span></div><div class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">1</span>:nrow(result))&#123;</div><div class="line">  <span class="keyword">if</span> (result[i] &lt; <span class="number">0</span>)&#123;</div><div class="line">    result[i] &lt;- <span class="number">0</span></div><div class="line">  &#125;</div><div class="line">  <span class="keyword">else</span> &#123;</div><div class="line">    result[i] &lt;- <span class="number">1</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>用户资料展示了每个用户对于各电影流派的整体倾向。列是用户ID，正值表示该用户对特定流派的偏好。之后将数值简化为二元矩阵——正值映射为1，表示喜欢；负值映射为0，表示不喜欢。<br>现在我们有了用户资料数据，之后的分析有两种方法可供选择。</p>
+<ol>
+<li>基于物品描述（电影流派）预测用户是否会喜欢该物品。可以通过预测用户对电影评分得到。</li>
+<li>假设用户喜欢的物品都是同一类型的，而用户资料表示了他对商品特性的偏好，那么根据用户资料显示所推断出来的与其偏好最相似的就是需要推荐给该用户的电影。</li>
+</ol>
+<p>我选择了第二种方式，并使用 <code>Jaccard</code> 距离来衡量用户资料和电影流派矩阵之间的相似度。之所以选择 <code>Jaccard</code>  距离是因为它比较适用于二元数据的相似度衡量。<br>我使用了 <code>proxy</code> 包中的 <code>dist()</code> 函数来计算 <code>Jaccard</code> 距离。但是，该函数计算的是同一个矩阵不同行之间的距离。因此我需要对每一个用户都将电影流派矩阵和他对应的用户资料矩阵合并为一个矩阵，然后获取与每个用户的最小距离。在我的本地环境下，这项计算花费了不少时间。<br>为了简单起见，下面只展示对数据集中第一个用户的处理方式。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">result2 &lt;- result[<span class="number">1</span>,] <span class="comment">#First user's profile</span></div><div class="line">sim_mat &lt;- rbind.data.frame(result2, genre_matrix3)</div><div class="line">sim_mat &lt;- data.frame(lapply(sim_mat,<span class="keyword">function</span>(x)&#123;as.integer(x)&#125;)) <span class="comment">#convert data to type integer</span></div><div class="line"> </div><div class="line"><span class="comment">#Calculate Jaccard distance between user profile and all movies</span></div><div class="line"><span class="keyword">library</span>(proxy)</div><div class="line">sim_results &lt;- dist(sim_mat, method = <span class="string">"Jaccard"</span>)</div><div class="line">sim_results &lt;- as.data.frame(as.matrix(sim_results[<span class="number">1</span>:<span class="number">8552</span>]))</div><div class="line">rows &lt;- which(sim_results == min(sim_results))</div><div class="line"><span class="comment">#Recommended movies</span></div><div class="line">movies[rows,<span class="number">2</span>]</div></pre></td></tr></table></figure>
+<p>现在我们成功生成了对数据集中第一个用户的一些推荐建议。你可以对数据集中每一个用户进行这样的循环操作，直到获得给所有用户的推荐建议。<br>让我们来看一下结果。<br>下面所示的是对 User 1建立的用户资料。User 1感兴趣的电影流派包括：儿童，纪录，奇幻，恐怖，音乐，战争。</p>
+<p><img src="https://muffynomster.files.wordpress.com/2015/06/screen-shot-2015-06-07-at-12-20-12-am.png" alt=""></p>
+<p>我们向 User 1推荐的电影：</p>
+<p><img src="https://muffynomster.files.wordpress.com/2015/06/screen-shot-2015-06-07-at-12-29-15-am.png" alt=""></p>
+<p>这些电影的相似度评分为0.5.我们可以推断出来ID为4291和65585的电影之所以评分较高是因为它们分别只标记了两种流派。User 1只对喜剧感兴趣，而且对犯罪类型和爱情类型的影片不感兴趣，因此这些看起来不像是有质量的推荐结果。解决这种问题的一个方法就是给每一种流派设定一个<em>等权重</em>。通过将流派矩阵中的每一个值除以对应电影所标记的流派数目的平方根就可以达到。比如对于ID为2015的电影，应除以sqrt(3)，而对于ID为4291的电影，则应除以sqrt(2).将每一种流派基于相同权重之后，应该可以提高推荐的质量。<br>现在我们完成了一个简单的基于内容的推荐系统，让我们来对比一下这种方法的优缺点。<br><strong>优点</strong>：基于内容的推荐系统不需要大量的用户数据。只需要物品数据就可以向用户提供推荐结果。而且，由于你的推荐系统不必依赖于大量的用户数据，因此可以就算是你的第一名用户，只要可以获得足够的数据来构建他的用户资料，就可以给他相应的推荐建议。<br><strong>缺点</strong>：这种方法要求物品数据是具有合理分布的。如果你的电影中80%都是动作片，那么通过基于内容的推荐系统就无法得到有效的推荐结果。此外，由此方法所得到的推荐结果通常是与用户有过交互的物品的直接替代品，而非互补品。互补品通常可以通过协同技术获得，下一部分中会有提到。<br>现在我们进行下一种方法！</p>
+<h2 id="基于用户的协同过滤方法"><a href="#基于用户的协同过滤方法" class="headerlink" title="基于用户的协同过滤方法"></a>基于用户的协同过滤方法</h2><p>基于用户的协同过滤方法将用户按照之前使用的行为或者其偏好进行分组，然后在同一组中的相似用户浏览或喜欢过的物品推荐给该用户。用外行人的话来说，如果User 1喜欢电影A、B、C，而且如果 User 2喜欢电影 A 和 B，那么就可以将电影 C 作为推荐建议推荐给 User 2. 基于用户的协同过滤方法模仿了实际生活中的口碑推荐方法。<br>在这篇文章中，我将使用基于用户的协同过滤方法对使用 R 中 <code>recommenderlab</code> 包的用户生成一个生成一个 top-10 推荐列表。使用 <code>recommenderlab</code> 包可以很简单的实施目前一些比较流行的协同过滤算法。</p>
+<h3 id="数据预处理-1"><a href="#数据预处理-1" class="headerlink" title="数据预处理"></a>数据预处理</h3><p>我们需要一个评分矩阵来通过 <code>recommenderlab</code> 包建立推荐模型。我们再次通过使用 <code>reshapes2</code> 包中的 <code>dcast()</code> 函数完成此步骤。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">library</span>(reshape2)</div><div class="line"><span class="comment">#Create ratings matrix. Rows = userId, Columns = movieId</span></div><div class="line">ratingmat &lt;- dcast(ratings, userId~movieId, value.var = <span class="string">"rating"</span>, na.rm=<span class="literal">FALSE</span>)</div><div class="line">ratingmat &lt;- as.matrix(ratingmat[,-<span class="number">1</span>]) <span class="comment">#remove userIds</span></div></pre></td></tr></table></figure>
+<p>下面是这个706×8552评分矩阵的预览。</p>
+<p><img src="https://muffynomster.files.wordpress.com/2015/06/screen-shot-2015-06-07-at-12-53-48-am.png" alt=""></p>
+<h3 id="建立推荐模型"><a href="#建立推荐模型" class="headerlink" title="建立推荐模型"></a>建立推荐模型</h3><p>基于用户的协同过滤推荐模型通过评分矩阵和 <code>recommenderlab</code> 建立，有以下参数：<br>Method: UBCF<br>Similarity Calculation Method: Cosine Similarity<br>Nearest Neighbors: 30<br>预测的用户对物品的评分结果将由与其最近邻的5个条目中推导得出。获得了预测的物品评分之后，前10个预测评分最高的物品将返回为推荐建议。<br>数据标准化：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">library</span>(recommenderlab)</div><div class="line"><span class="comment">#Convert rating matrix into a recommenderlab sparse matrix</span></div><div class="line">ratingmat &lt;- as(ratingmat, <span class="string">"realRatingMatrix"</span>)</div><div class="line"> </div><div class="line"><span class="comment">#Normalize the data</span></div><div class="line">ratingmat_norm &lt;- normalize(ratingmat)</div><div class="line"> </div><div class="line"><span class="comment">#Create Recommender Model. "UBCF" stands for User-Based Collaborative Filtering</span></div><div class="line">recommender_model &lt;- Recommender(ratingmat_norm, method = <span class="string">"UBCF"</span>, param=list(method=<span class="string">"Cosine"</span>,nn=<span class="number">30</span>))</div><div class="line">recom &lt;- predict(recommender_model, ratingmat[<span class="number">1</span>], n=<span class="number">10</span>) <span class="comment">#Obtain top 10 recommendations for 1st user in dataset</span></div><div class="line">recom_list &lt;- as(recom, <span class="string">"list"</span>) <span class="comment">#convert recommenderlab object to readable list</span></div><div class="line"> </div><div class="line"><span class="comment">#Obtain recommendations</span></div><div class="line">recom_result &lt;- matrix(<span class="number">0</span>,<span class="number">10</span>)</div><div class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> c(<span class="number">1</span>:<span class="number">10</span>))&#123;</div><div class="line"> recom_result[i] &lt;- movies[as.integer(recom_list[[<span class="number">1</span>]][i]),<span class="number">2</span>]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们轻而易举地获得了 User 1 的 top-10 结果！推荐给 User 1 的电影如下所示。</p>
+<p><img src="https://muffynomster.files.wordpress.com/2015/06/screen-shot-2015-06-07-at-1-04-25-am.png" alt=""></p>
+<p><code>recommenderlab</code> 包还提供了可以很简单地对我们的模型进行评估的方法。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">evaluation_scheme &lt;- evaluationScheme(ratingmat, method=<span class="string">"cross-validation"</span>, k=<span class="number">5</span>, given=<span class="number">3</span>, goodRating=<span class="number">5</span>) <span class="comment">#k=5 meaning a 5-fold cross validation. given=3 meaning a Given-3 protocol</span></div><div class="line">evaluation_results &lt;- evaluate(evaluation_scheme, method=<span class="string">"UBCF"</span>, n=c(<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">10</span>,<span class="number">15</span>,<span class="number">20</span>))</div><div class="line">eval_results &lt;- getConfusionMatrix(evaluation_results)[[<span class="number">1</span>]]</div></pre></td></tr></table></figure>
+<p>top-N 推荐系统的评价结果：</p>
+<p><img src="https://muffynomster.files.wordpress.com/2015/06/screen-shot-2015-06-07-at-1-16-05-am.png" alt=""></p>
+<p>我们来分析一下基于用户的协同过滤方法的优缺点。<br><strong>优点</strong>：基于用户的协同过滤方法给予用户的推荐是他们有过交互的物品的互补品。这种推荐结果可能比基于内容的推荐系统所得出的结果更有力，因为用户不一定会想看他们刚刚或早就看过的电影的替代品。<br><strong>缺点</strong>：基于用户的协同过滤方法是一种基于记忆的协同过滤，使用了数据库中所有的用户数据来建立推荐结果。比较数据库中每个用户的成对相关性的操作是相对不可扩展的。如果有上百万的用户的话，相应的计算量将耗费相当长的时间。通过使用一些数据降维方法，比如主成分分析法，或者使用基于模型的算法，可以应对这种问题。此外，基于用户的协同过滤方法依赖于过于的用户选择来推断未来的推荐。这就意味着我们假设了用户的口味和偏好在时间维度上多多少少保持一个恒定不变的状态，但这种假设不一定成立，并且使得想要在线下预计算用户相似度较为困难。</p>
+<p>来源: <a href="https://www.coursera.org/learn/recommender-systems" target="_blank" rel="external">coursera</a>, <a href="http://cran.r-project.org/web/packages/recommenderlab/vignettes/recommenderlab.pdf" target="_blank" rel="external">recommenderlab</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/R语言/" rel="tag"># R语言</a>
+          
+            <a href="/tags/数据挖掘/" rel="tag"># 数据挖掘</a>
+          
+            <a href="/tags/翻译/" rel="tag"># 翻译</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/01/地图矩形测距小工具/" rel="next" title="地图矩形测距小工具">
+                <i class="fa fa-chevron-left"></i> 地图矩形测距小工具
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/02/使用R进行文本处理/" rel="prev" title="使用R进行文本处理">
+                使用R进行文本处理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="ElenoreZH" />
+          <p class="site-author-name" itemprop="name">ElenoreZH</p>
+           
+              <p class="site-description motion-element" itemprop="description">Your smart gets you slow. Young blood gets you old.</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ElenoreChang" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/dearelenore" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.instagram.com/dearelenore/" target="_blank" title="Instagram">
+                  
+                    <i class="fa fa-fw fa-instagram"></i>
+                  
+                  Instagram
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/xiaohanzh/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据集"><span class="nav-number">1.</span> <span class="nav-text">数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于内容过滤方法"><span class="nav-number">2.</span> <span class="nav-text">基于内容过滤方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据预处理"><span class="nav-number">2.1.</span> <span class="nav-text">数据预处理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于用户的协同过滤方法"><span class="nav-number">3.</span> <span class="nav-text">基于用户的协同过滤方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据预处理-1"><span class="nav-number">3.1.</span> <span class="nav-text">数据预处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#建立推荐模型"><span class="nav-number">3.2.</span> <span class="nav-text">建立推荐模型</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ElenoreZH</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://ElenoreZH.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2017/01/17/使用R搭建一个电影推荐引擎/';
+          this.page.identifier = '2017/01/17/使用R搭建一个电影推荐引擎/';
+          this.page.title = '使用R搭建一个电影推荐引擎';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://ElenoreZH.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
